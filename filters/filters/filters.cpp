@@ -263,9 +263,9 @@ void *threadFunc(void * thread_arg){
         sum += my_data->dstR[i] + my_data->dstG[i] + my_data->dstG[i];
     }
     //std::cout << *my_data->sum << " ";
-    std::cout << sum << " ";
     pthread_mutex_lock(&lock);
-    my_data->sum+= sum;
+    std::cout << sum << " ";
+    *my_data->sum+= sum;
     pthread_mutex_unlock(&lock);
     pthread_exit(NULL);
 }
