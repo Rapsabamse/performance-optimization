@@ -258,14 +258,16 @@ pthread_mutex_t lock;
 void *threadFunc(void * thread_arg){
     struct thread_data *my_data;
     my_data = (struct thread_data *) thread_arg;
-    int thread_sum = 0;
-    std::cout << "\nThread number: " << my_data->thread_number << " Nump: " << my_data->nump << " Thread id: " << my_data->thread_id << "\n";
 
+    //Start at thread id
+    //Jump the amount of threads
+    int thread_sum = 0;
     for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_number) {
         thread_sum += my_data->dstR[i] + my_data->dstG[i] + my_data->dstB[i];
     }
+
+    //Lock mutex so multiple threads cant write at the same time, prevent race conditions
     pthread_mutex_lock(&lock);
-    std::cout << thread_sum << " ";
     *my_data->sum+= thread_sum;
     pthread_mutex_unlock(&lock);
     pthread_exit(NULL);
@@ -302,18 +304,10 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
         );
     }
 
-    int sumReal = 0;
-    for (auto i { 0 }; i < nump; i++) {
-        sumReal += dstR[i] + dstG[i] + dstB[i];
-    }
-
     for (auto i { 0 } ; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
     }
 
-    std::cout << "\n\nsum: "<< sum << "\n\n";
-
-    std::cout << "\n\nReal sum: "<< sumReal << "\n\n";
     sum /= nump;
 
     unsigned psum {};
