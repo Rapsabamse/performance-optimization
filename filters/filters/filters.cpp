@@ -251,7 +251,7 @@ struct thread_data{
         const unsigned char* dstR;
         const unsigned char* dstG;
         const unsigned char* dstB;
-        int* sum;
+        unsigned int* sum;
 };
 
 pthread_mutex_t lock;
@@ -265,7 +265,7 @@ void *threadFunc(void * thread_arg){
     //std::cout << *my_data->sum << " ";
     std::cout << sum << " ";
     pthread_mutex_lock(&lock);
-    *my_data->sum+= sum;
+    my_data->sum+= sum;
     pthread_mutex_unlock(&lock);
     pthread_exit(NULL);
 }
@@ -291,7 +291,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
         thread_data_array[i].nump = nump;
         thread_data_array[i].dstR = dstR;
         thread_data_array[i].dstG = dstG;
-        thread_data_array[i].sum = &sum;
+        thread_data_array[i].sum = sum;
 
         pthread_create(
             &p_threads[i],
