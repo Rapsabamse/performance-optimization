@@ -265,7 +265,7 @@ void *threadFunc(void * thread_arg){
     //std::cout << *my_data->sum << " ";
     std::cout << sum << " ";
     pthread_mutex_lock(&lock);
-    my_data->sum+= sum;
+    *my_data->sum+= sum;
     pthread_mutex_unlock(&lock);
     pthread_exit(NULL);
 }
