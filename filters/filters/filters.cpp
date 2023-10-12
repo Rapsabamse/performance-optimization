@@ -261,7 +261,7 @@ void *threadFunc(void * thread_arg){
     int thread_sum = 0;
     std::cout << "\nThread number: " << my_data->thread_number << " Nump: " << my_data->nump << " Thread id: " << my_data->thread_id << "\n";
 
-    for (auto i { 0 }; i < my_data->nump; i += 1) {
+    for (auto i { 0 }; i < 515788; i += 1) {
         thread_sum += my_data->dstR[i] + my_data->dstG[i] + my_data->dstG[i];
     }
 
