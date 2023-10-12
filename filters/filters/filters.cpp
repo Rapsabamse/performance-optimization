@@ -283,7 +283,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
     pthread_t p_threads[MAX_THREADS];
     int thread_sum[MAX_THREADS];
 
-    pthread_mutex_init(&lock, NULL)
+    pthread_mutex_init(&lock, NULL);
 
     for(auto i { 0 }; i < MAX_THREADS; i++){
         thread_data_array[i].thread_id = i;
