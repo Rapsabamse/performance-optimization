@@ -258,18 +258,30 @@ pthread_mutex_t lock;
 void *threadFunc(void * thread_arg){
     struct thread_data *my_data;
     my_data = (struct thread_data *) thread_arg;
-    int sum = 0;
-    for (auto i { my_data->thread_id}; i < my_data->nump; i += my_data->thread_number) {
-        sum += my_data->dstR[i] + my_data->dstG[i] + my_data->dstG[i];
+
+    int thread_id = my_data->thread_id;
+    int num_elements = my_data->nump;
+    int* dstR = my_data->dstR;
+    int* dstG = my_data->dstG;
+    int* dstB = my_data->dstB;
+
+    int threadsum = 0;
+    for (int i = thread_id; i < num_elements; i += num_elements) {
+        threadsum += dstR[i] + dstG[i] + dstB[i];
     }
+
+    //int threadsum = 0;
+    //for (auto i { my_data->thread_id}; i < my_data->nump; i += my_data->thread_number) {
+    //    threadsum += my_data->dstR[i] + my_data->dstG[i] + my_data->dstG[i];
+    //}
 
     //for (auto i { 0 }; i < nump; i++) {
     //    sumReal += dstR[i] + dstG[i] + dstB[i];
     //}
 
     pthread_mutex_lock(&lock);
-    std::cout << sum << " ";
-    *my_data->sum+= sum;
+    std::cout << threadsum << " ";
+    *my_data->sum+= threadsum;
     pthread_mutex_unlock(&lock);
     pthread_exit(NULL);
 }
