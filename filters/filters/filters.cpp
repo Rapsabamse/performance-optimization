@@ -259,10 +259,10 @@ void *threadFunc(void * thread_arg){
     struct thread_data *my_data;
     my_data = (struct thread_data *) thread_arg;
     int sum = 0;
-    for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_number) {
-        sum += my_data->dstR[i] + my_data->dstG[i] + my_data->dstG[i];
-    }
-    //std::cout << *my_data->sum << " ";
+    //for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_number) {
+    //    sum += my_data->dstR[i] + my_data->dstG[i] + my_data->dstG[i];
+    //}
+    sum++;
     pthread_mutex_lock(&lock);
     std::cout << sum << " ";
     *my_data->sum+= sum;
