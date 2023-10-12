@@ -260,7 +260,7 @@ void *threadFunc(void * thread_arg){
     my_data = (struct thread_data *) thread_arg;
 
     int threadsum = 0;
-    for (auto i { my_data->thread_id}; i < my_data->nump; i += 300) {
+    for (auto i { my_data->thread_id}; i < my_data->nump - 1; my_data->nump) {
         threadsum += my_data->dstR[i] + my_data->dstG[i] + my_data->dstG[i];
     }
 
