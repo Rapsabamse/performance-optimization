@@ -261,9 +261,9 @@ void *threadFunc(void * thread_arg){
 
     int thread_id = my_data->thread_id;
     int num_elements = my_data->nump;
-    int* dstR = my_data->dstR;
-    int* dstG = my_data->dstG;
-    int* dstB = my_data->dstB;
+    const unsigned char* dstR = my_data->dstR;
+    const unsigned char* dstG = my_data->dstG;
+    const unsigned char* dstB = my_data->dstB;
 
     int threadsum = 0;
     for (int i = thread_id; i < num_elements; i += num_elements) {
