@@ -259,21 +259,10 @@ void *threadFunc(void * thread_arg){
     struct thread_data *my_data;
     my_data = (struct thread_data *) thread_arg;
 
-    int thread_id = my_data->thread_id;
-    int num_elements = my_data->nump;
-    const unsigned char* dstR = my_data->dstR;
-    const unsigned char* dstG = my_data->dstG;
-    const unsigned char* dstB = my_data->dstB;
-
     int threadsum = 0;
-    for (int i = thread_id; i < num_elements; i += num_elements) {
-        threadsum += dstR[i] + dstG[i] + dstB[i];
+    for (auto i { my_data->thread_id}; i < my_data->nump; i += my_data->thread_number) {
+        threadsum += my_data->dstR[i] + my_data->dstG[i] + my_data->dstG[i];
     }
-
-    //int threadsum = 0;
-    //for (auto i { my_data->thread_id}; i < my_data->nump; i += my_data->thread_number) {
-    //    threadsum += my_data->dstR[i] + my_data->dstG[i] + my_data->dstG[i];
-    //}
 
     //for (auto i { 0 }; i < nump; i++) {
     //    sumReal += dstR[i] + dstG[i] + dstB[i];
