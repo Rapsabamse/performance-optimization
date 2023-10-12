@@ -286,7 +286,6 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
 
     struct thread_data thread_data_array[MAX_THREADS];
     pthread_t p_threads[MAX_THREADS];
-    int thread_sum[MAX_THREADS];
 
     pthread_mutex_init(&lock, NULL);
     std::cout << "real nump:" << nump;
@@ -294,9 +293,9 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
         thread_data_array[i].thread_id = i;
         thread_data_array[i].thread_number = MAX_THREADS;
         thread_data_array[i].nump = nump;
-        thread_data_array[i].dstR = dstR;
-        thread_data_array[i].dstG = dstG;
-        thread_data_array[i].dstB = dstB;
+        thread_data_array[i].dstR = &dstR;
+        thread_data_array[i].dstG = &dstG;
+        thread_data_array[i].dstB = &dstB;
         thread_data_array[i].sum = &sum;
 
         pthread_create(
