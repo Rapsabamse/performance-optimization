@@ -286,7 +286,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
     pthread_t p_threads[MAX_THREADS];
 
     pthread_mutex_init(&lock, NULL);
-    std::cout << "real nump:" << nump;
+
     for(int i= 0; i < MAX_THREADS; i++){
         thread_data_array[i].thread_id = i;
         thread_data_array[i].thread_number = MAX_THREADS;
