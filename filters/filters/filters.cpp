@@ -341,7 +341,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
     unsigned psum {};
 
 
-    for(int i= 0; i < MAX_THREADS; i++){
+    /*for(int i= 0; i < MAX_THREADS; i++){
         thread_data_array[i].thread_id = i;
         thread_data_array[i].thread_amount = MAX_THREADS;
         thread_data_array[i].nump = nump;
@@ -356,7 +356,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
             threadUpdateImg,
             (void*) &thread_data_array[i]
         );
-    }
+    }*/
 
     return 0;
 }
