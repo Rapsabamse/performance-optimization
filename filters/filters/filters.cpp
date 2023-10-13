@@ -210,8 +210,8 @@ void *threadblurX(void * thread_arg){
                     g += wc * dstG[y * dstXsize + x2];
                     b += wc * dstB[y * dstXsize + x2];
                     n += wc;
-                }*/
-            }
+                }
+            }*/
             //scrR[y * scrXsize + x] = r / n;
             //scrG[y * scrXsize + x] = g / n;
             //scrB[y * scrXsize + x] = b / n;
