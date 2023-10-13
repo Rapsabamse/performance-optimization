@@ -366,7 +366,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
             dstR[i] = dstG[i] = dstB[i] = 0;
         } else {
             //dst.r(i, 0) = dst.g(i, 0) = dst.b(i, 0) = 255;
-            dstR2[i] = dstG[i] = dstB[i] = 255;
+            dstR[i] = dstG[i] = dstB[i] = 255;
         }
     }
 
