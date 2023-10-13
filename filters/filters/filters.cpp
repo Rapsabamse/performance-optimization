@@ -241,7 +241,7 @@ void *threadblurY(void * thread_arg){
     //for (auto x { 0 }; x < dstXsize; x++) {
         //for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
     for (auto x { 0 }; x < dstXsize; x++) {
-        for (auto y { 0 }; y < dstYSize; y++) {
+        for (auto y { 0 }; y < dstYsize; y++) {
             //auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
             auto r { my_data->w[0] * scrR[y * dstXsize + x] },
                 g { my_data->w[0] * scrG[y * dstXsize + x] },
