@@ -192,6 +192,7 @@ void *threadblurX(void * thread_arg){
 
     //for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
     //    for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
+    int a = 0;
     for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYsize; y++) {
             //auto r { my_data->w[0] * dst.r(x, y) }, g { my_data->w[0] * dst.g(x, y) }, b { my_data->w[0] * dst.b(x, y) }, n { my_data->w[0] };
@@ -216,13 +217,14 @@ void *threadblurX(void * thread_arg){
                     b += wc * dstB[y * dstXsize + x2];
                     n += wc;
                 }
+                a++;
             }
             scrR[y * scrXsize + x] = r / n;
             scrG[y * scrXsize + x] = g / n;
             scrB[y * scrXsize + x] = b / n;
         }
     }
-
+    std::cout << "Loops: " << a << "\n\n";
     pthread_exit(NULL);
 }
 
@@ -291,8 +293,8 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
     for (auto i { 0 } ; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
     }
-
-    /*for (auto x { 0 }; x < dstXsize; x++) {
+    int a = 0;
+    for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYSize; y++) {
             auto r { w[0] * dst.r(x, y) }, g { w[0] * dst.g(x, y) }, b { w[0] * dst.b(x, y) }, n { w[0] };
 
@@ -312,13 +314,14 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
                     b += wc * dstB[y * dstXsize + x2];
                     n += wc;
                 }
+                a++;
             }
             scrR[y * scrXsize + x] = r / n;
             scrG[y * scrXsize + x] = g / n;
             scrB[y * scrXsize + x] = b / n;
         }
-    }*/
-
+    }
+    std::cout << " loops Real: " << a << "\n\n";
     for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYSize; y++) {
             auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
