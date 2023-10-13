@@ -236,7 +236,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
     //cache value frequently used, never changed
     const auto dstXsize = dst.get_x_size();
     const auto dstYSize = dst.get_y_size();
-
+    std::cout << "Real x size: " << dstXsize << " Real y size: " << dstYSize << "\n\n";
     //pointers for r,g,b dst matrix
     //non constant pointers so values can be changed
     auto dstR = dst.get_R_nonconst();
