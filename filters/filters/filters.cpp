@@ -262,9 +262,9 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         thread_data_array[i].w = w_ptr;
 
         //Sizes of matrixes
-        thread_data_array[i].dstMatrix_x;
-        thread_data_array[i].dstMatrix_y;
-        thread_data_array[i].scrMatrix_x;
+        thread_data_array[i].dstMatrix_x = dstXsize;
+        thread_data_array[i].dstMatrix_y = dstYSize;
+        thread_data_array[i].scrMatrix_x = scrXsize;
 
         //pointers to colors
         thread_data_array[i].dstR = dstR;
