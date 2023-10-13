@@ -363,10 +363,10 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
         psum = dstR[i] + dstG[i] + dstB[i];
         if (sum > psum) {
             //dst.r(i, 0) = dst.g(i, 0) = dst.b(i, 0) = 0;
-            dstR2[i] = dstG2[i] = dstB2[i] = 0;
+            dstR[i] = dstG[i] = dstB[i] = 0;
         } else {
             //dst.r(i, 0) = dst.g(i, 0) = dst.b(i, 0) = 255;
-            dstR2[i] = dstG2[i] = dstB2[i] = 255;
+            dstR2[i] = dstG[i] = dstB[i] = 255;
         }
     }
 
