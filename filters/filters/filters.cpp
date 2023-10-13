@@ -154,6 +154,7 @@ struct thread_data_blur{
         int thread_id;
         int thread_amount;
         int radius;
+        double w[Gauss::max_radius];
         int dstMatrix_x;
         int dstMatrix_y;
         int scrMatrix_x;
@@ -173,6 +174,7 @@ void *threadblurX(void * thread_arg){
     int dstXsize = my_data->dstMatrix_x;
     int dstYsize = my_data->dstMatrix_y;
     int scrXsize = my_data->dstMatrix_x;
+    double w[Gauss::max_radius] = my_data->w;
     unsigned char* dstR = my_data->dstR;
     unsigned char* dstG = my_data->dstG;
     unsigned char* dstB = my_data->dstB;
@@ -245,6 +247,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         thread_data_array[i].thread_id = i;
         thread_data_array[i].thread_amount = MAX_THREADS;
         thread_data_array[i].radius = radius;
+        thread_data_array[i].w = w;
         thread_data_array[i].dstMatrix_x;
         thread_data_array[i].dstMatrix_y;
         thread_data_array[i].scrMatrix_x;
