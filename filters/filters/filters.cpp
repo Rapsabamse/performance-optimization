@@ -150,6 +150,57 @@ Matrix threshold(Matrix &m)
     return 0;
 }
 
+struct thread_data_blur{
+        int thread_id;
+        int thread_amount;
+        int radius;
+        int dstMatrix_x;
+        int dstMatrix_y;
+        int scrMatrix_x;
+        unsigned char* dstR;
+        unsigned char* dstG;
+        unsigned char* dstB;
+};
+
+void *threadblurX(void * thread_arg){
+    struct thread_data_blur *my_data;
+    my_data = (struct thread_data_blur *) thread_arg;
+
+    int radius = my_data->radius;
+    int dstXsize = my_data->dstMatrix_x;
+    int dstYsize = my_data->dstMatrix_y;
+    int scrXsize = mydate->dstMatrix_x;
+
+    for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
+        for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
+            auto r { w[0] * dst.r(x, y) }, g { w[0] * dst.g(x, y) }, b { w[0] * dst.b(x, y) }, n { w[0] };
+
+            for (auto wi { 1 }; wi <= radius; wi++) {
+                auto wc { w[wi] };
+                auto x2 { x - wi };
+                if (x2 >= 0) {
+                    r += wc * dstR[y * dstXsize + x2];
+                    g += wc * dstG[y * dstXsize + x2];
+                    b += wc * dstB[y * dstXsize + x2];
+                    n += wc;
+                }
+                x2 = x + wi;
+                if (x2 < dstXsize) {
+                    r += wc * dstR[y * dstXsize + x2];
+                    g += wc * dstG[y * dstXsize + x2];
+                    b += wc * dstB[y * dstXsize + x2];
+                    n += wc;
+                }
+            }
+            scrR[y * scrXsize + x] = r / n;
+            scrG[y * scrXsize + x] = g / n;
+            scrB[y * scrXsize + x] = b / n;
+        }
+    }
+
+    pthread_exit(NULL);
+}
+
 //parallelised versions
 Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
 {
@@ -177,7 +228,35 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
 
     const auto scrXsize = scratch.get_x_size();
 
-    for (auto x { 0 }; x < dstXsize; x++) {
+    struct thread_data_blur thread_data_array[MAX_THREADS];
+    pthread_t p_threads[MAX_THREADS];
+
+    //Add values for the thread_data_array to be used in function
+    for(int i= 0; i < MAX_THREADS; i++){
+        thread_data_array[i].thread_id = i;
+        thread_data_array[i].thread_amount = MAX_THREADS;
+        thread_data_array[i].radius = radius;
+        thread_data_array[i].dstMatrix_x;
+        thread_data_array[i].dstMartix_y;
+        thread_data_array[i].scrMatrix_x;
+        thread_data_array[i].dstR = dstR;
+        thread_data_array[i].dstG = dstG;
+        thread_data_array[i].dstB = dstB;
+
+        //create threads and run threadSum, thread_data_array is passed as a parameter
+        pthread_create(
+            &p_threads[i],
+            NULL,
+            threadblurX,
+            (void*) &thread_data_array[i]
+        );
+    }
+
+    for (auto i { 0 } ; i < MAX_THREADS; i++) {
+        pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
+    }
+
+    /*for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYSize; y++) {
             auto r { w[0] * dst.r(x, y) }, g { w[0] * dst.g(x, y) }, b { w[0] * dst.b(x, y) }, n { w[0] };
 
@@ -202,7 +281,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
             scrG[y * scrXsize + x] = g / n;
             scrB[y * scrXsize + x] = b / n;
         }
-    }
+    }*/
 
     for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYSize; y++) {
