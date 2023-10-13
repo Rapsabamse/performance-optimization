@@ -173,9 +173,9 @@ void *threadblurX(void * thread_arg){
     my_data = (struct thread_data_blur *) thread_arg;
 
     std::cout << "ran";
-    /*int radius = my_data->radius;
+    int radius = my_data->radius;
     double* w = my_data->w;
-    int dstXsize = my_data->dstMatrix_x;
+    /*int dstXsize = my_data->dstMatrix_x;
     int dstYsize = my_data->dstMatrix_y;
     int scrXsize = my_data->dstMatrix_x;
     unsigned char* dstR = my_data->dstR;
