@@ -365,7 +365,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
     }
 
-    /*//Add values for the thread_data_array to be used in function
+    //Add values for the thread_data_array to be used in function
     for(int i= 0; i < MAX_THREADS; i++){
         //create threads and run threadSum, thread_data_array is passed as a parameter
         pthread_create(
@@ -378,7 +378,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
 
     for (auto i { 0 } ; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
-    }*/
+    }
 
     return dst;
 }
