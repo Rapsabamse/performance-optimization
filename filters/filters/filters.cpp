@@ -169,7 +169,10 @@ void *threadblurX(void * thread_arg){
     int radius = my_data->radius;
     int dstXsize = my_data->dstMatrix_x;
     int dstYsize = my_data->dstMatrix_y;
-    int scrXsize = mydate->dstMatrix_x;
+    int scrXsize = my_data->dstMatrix_x;
+    unsigned char* dstR = my_data->dstR;
+    unsigned char* dstG = my_data->dstG;
+    unsigned char* dstB = my_data->dstB;
 
     for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
