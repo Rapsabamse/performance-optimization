@@ -7,7 +7,7 @@ status=0
 temp_dir=$(mktemp -d 2> /dev/null || mktemp -d -t 'mytmpdir')
 red=$(tput setaf 1)
 reset=$(tput sgr0)
-
+echo "starting"
 for thread in 1 2 4 8 16 32
 do
     for image in im1 im2 im3 im4
