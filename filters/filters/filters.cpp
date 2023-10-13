@@ -154,7 +154,7 @@ struct thread_data_blur{
         int thread_id;
         int thread_amount;
         int radius;
-        double (*)[Gauss::max_radius] w;
+        double* w;
 
         int dstMatrix_x;
         int dstMatrix_y;
@@ -226,6 +226,8 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
 
     double w[Gauss::max_radius] {};
     Gauss::get_weights(radius, w);
+    double *w_ptr;
+    w_ptr = w;
 
     //cache value frequently used, never changed
     const auto dstXsize = dst.get_x_size();
@@ -253,7 +255,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         thread_data_array[i].thread_id = i;
         thread_data_array[i].thread_amount = MAX_THREADS;
         thread_data_array[i].radius = radius;
-        thread_data_array[i].w = &w;
+        thread_data_array[i].w = w_ptr;
 
         //Sizes of matrixes
         thread_data_array[i].dstMatrix_x;
