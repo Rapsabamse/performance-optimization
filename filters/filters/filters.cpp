@@ -336,7 +336,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
     }
 
-    /*for (auto x { 0 }; x < dstXsize; x++) {
+    for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYSize; y++) {
             auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
 
@@ -362,10 +362,10 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
             dstG[y * dstXsize + x] = g / n;
             dstB[y * dstXsize + x] = b / n;
         }
-    }*/
+    }
 
     //Add values for the thread_data_array to be used in function
-    for(int i= 0; i < MAX_THREADS; i++){
+    /*for(int i= 0; i < MAX_THREADS; i++){
         //create threads and run threadSum, thread_data_array is passed as a parameter
         pthread_create(
             &p_threads[i],
@@ -377,7 +377,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
 
     for (auto i { 0 } ; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
-    }
+    }*/
     return dst;
 }
 
