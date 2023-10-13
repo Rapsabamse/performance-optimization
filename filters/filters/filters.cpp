@@ -174,8 +174,6 @@ void *threadblurX(void * thread_arg){
     int dstXsize = my_data->dstMatrix_x;
     int dstYsize = my_data->dstMatrix_y;
     int scrXsize = my_data->dstMatrix_x;
-    double w[Gauss::max_radius] {};
-    w = my_data->w;
     unsigned char* dstR = my_data->dstR;
     unsigned char* dstG = my_data->dstG;
     unsigned char* dstB = my_data->dstB;
@@ -185,7 +183,7 @@ void *threadblurX(void * thread_arg){
 
     for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
-            auto r { w[0] * dst.r(x, y) }, g { w[0] * dst.g(x, y) }, b { w[0] * dst.b(x, y) }, n { w[0] };
+            auto r { my_data->w[0] * dst.r(x, y) }, g { my_data->w[0] * dst.g(x, y) }, b { my_data->w[0] * dst.b(x, y) }, n { my_data->w[0] };
 
             for (auto wi { 1 }; wi <= radius; wi++) {
                 auto wc { w[wi] };
