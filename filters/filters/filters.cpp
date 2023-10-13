@@ -155,36 +155,39 @@ struct thread_data_blur{
         int thread_amount;
         int radius;
         double* w;
-        Matrix* dst;
-        Matrix* scratch;
+
+        int dstMatrix_x;
+        int dstMatrix_y;
+        int scrMatrix_x;
+
+        unsigned char* dstR;
+        unsigned char* dstG;
+        unsigned char* dstB;
+        unsigned char* scrR;
+        unsigned char* scrG;
+        unsigned char* scrB;
 };
 
 void *threadblurX(void * thread_arg){
     struct thread_data_blur *my_data;
     my_data = (struct thread_data_blur *) thread_arg;
 
-    std::cout << "ran";
     int radius = my_data->radius;
     double* w = my_data->w;
 
-    //cache value frequently used, never changed
-    const auto dstXsize = my_data->dst.get_x_size();
-    const auto dstYSize = my_data->dst.get_y_size();
+    int dstXsize = my_data->dstMatrix_x;
+    int dstYsize = my_data->dstMatrix_y;
+    int scrXsize = my_data->dstMatrix_x;
 
-    //pointers for r,g,b dst matrix
-    //non constant pointers so values can be changed
-    auto dstR = my_data->dst.get_R_nonconst();
-    auto dstG = my_data->dst.get_G_nonconst();
-    auto dstB = my_data->dst.get_B_nonconst();
+    unsigned char* dstR = my_data->dstR;
+    unsigned char* dstG = my_data->dstG;
+    unsigned char* dstB = my_data->dstB;
+    unsigned char* scrR = my_data->scrR;
+    unsigned char* scrG = my_data->scrG;
+    unsigned char* scrB = my_data->scrB;
 
-    //pointers for r,g,b scratch matrix
-    //non constant pointers so values can be changed
-    auto scrR = my_data->scratch.get_R_nonconst();
-    auto scrG = my_data->scratch.get_G_nonconst();
-    auto scrB = my_data->scratch.get_B_nonconst();
-
-    const auto scrXsize = my_data->scratch.get_x_size();
-
+    std::cout << "thread id: " << my_data->thread_id << " thread_amount: " << my_data->thread_amount;
+    std::cout << " dstXSize: " << dstXsize << " dstYsize: " << dstYsize << "\n\n";
     for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
             //auto r { my_data->w[0] * dst.r(x, y) }, g { my_data->w[0] * dst.g(x, y) }, b { my_data->w[0] * dst.b(x, y) }, n { my_data->w[0] };
@@ -192,7 +195,7 @@ void *threadblurX(void * thread_arg){
                 g { my_data->w[0] * dstG[y * dstXsize + x] },
                 b { my_data->w[0] * dstB[y * dstXsize + x] },
                 n { my_data->w[0] };
-            */
+
             /*for (auto wi { 1 }; wi <= radius; wi++) {
                 auto wc { w[wi] };
                 auto x2 { x - wi };
@@ -227,12 +230,8 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
 
     double w[Gauss::max_radius] {};
     Gauss::get_weights(radius, w);
-
     double *w_ptr;
     w_ptr = w;
-
-    Matrix* dst_ptr = &dst;
-    Matrix* scratch_ptr = &scratch;
 
     //cache value frequently used, never changed
     const auto dstXsize = dst.get_x_size();
@@ -261,8 +260,19 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         thread_data_array[i].thread_amount = MAX_THREADS;
         thread_data_array[i].radius = radius;
         thread_data_array[i].w = w_ptr;
-        thread_data_array[i].dst = dst_ptr;
-        thread_data_array[i].scratch = scratch_ptr;
+
+        //Sizes of matrixes
+        thread_data_array[i].dstMatrix_x;
+        thread_data_array[i].dstMatrix_y;
+        thread_data_array[i].scrMatrix_x;
+
+        //pointers to colors
+        thread_data_array[i].dstR = dstR;
+        thread_data_array[i].dstG = dstG;
+        thread_data_array[i].dstB = dstB;
+        thread_data_array[i].scrR = scrR;
+        thread_data_array[i].scrG = scrG;
+        thread_data_array[i].scrB = scrB;
 
         //create threads and run threadSum, thread_data_array is passed as a parameter
         pthread_create(
