@@ -289,11 +289,11 @@ void *threadUpdateImg(void * thread_arg){
         if (sum > psum) {
            my_data->dstR[i] = my_data->dstG[i] = my_data->dstB[i] = 0;
         } else {
+            std::cout << "ran";
             my_data->dstR[i] = my_data->dstG[i] = my_data->dstB[i] = 255;
         }
     }
 
-        std::cout << "ran";
     pthread_exit(NULL);
 }
 
