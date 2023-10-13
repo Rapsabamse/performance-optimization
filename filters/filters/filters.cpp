@@ -237,9 +237,11 @@ void *threadblurY(void * thread_arg){
     unsigned char* scrG = my_data->scrG;
     unsigned char* scrB = my_data->scrB;
 
-    int a = 0;
+    //int a = 0;
+    //for (auto x { 0 }; x < dstXsize; x++) {
+        //for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
     for (auto x { 0 }; x < dstXsize; x++) {
-        for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
+        for (auto y { 0 }; y < dstYSize; y++) {
             //auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
             auto r { my_data->w[0] * scrR[y * dstXsize + x] },
                 g { my_data->w[0] * scrG[y * dstXsize + x] },
@@ -262,7 +264,7 @@ void *threadblurY(void * thread_arg){
                     b += wc * scrB[y2 * scrXsize + x];
                     n += wc;
                 }
-                a++;
+                //a++;
             }
 
             dstR[y * dstXsize + x] = r / n;
@@ -270,7 +272,7 @@ void *threadblurY(void * thread_arg){
             dstB[y * dstXsize + x] = b / n;
         }
     }
-    std::cout << "Loops: " << a << "\n\n";
+    //std::cout << "Loops: " << a << "\n\n";
 
     /*for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYSize; y++) {
@@ -365,7 +367,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
     for (auto i { 0 } ; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
     }
-    int a = 0;
+    /*int a = 0;
     for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYSize; y++) {
             auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
@@ -394,7 +396,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
             dstB[y * dstXsize + x] = b / n;
         }
     }
-    std::cout << "Real loops: " << a << "\n\n";
+    std::cout << "Real loops: " << a << "\n\n";*/
 
     //Add values for the thread_data_array to be used in function
     for(int i= 0; i < MAX_THREADS; i++){
