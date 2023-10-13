@@ -285,7 +285,7 @@ void *threadUpdateImg(void * thread_arg){
     unsigned sum = *my_data->sum;
     unsigned psum {};
     for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount) {
-        psum = dstR[i] + dstG[i] + dstB[i];
+        psum = my_data->dstR[i] + my_data->dstG[i] + my_data->dstB[i];
         if (sum > psum) {
            my_data->dstR[i] = my_data->dstG[i] = my_data->dstB[i] = 0;
         } else {
