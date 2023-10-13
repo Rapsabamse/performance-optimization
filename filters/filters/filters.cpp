@@ -285,7 +285,7 @@ void *threadUpdateImg(void * thread_arg){
     unsigned sum = *my_data->sum;
     unsigned psum {};
     for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount) {
-        psum = my_data->dstR[i] + my_data->dstG[i] + my_data->dstB[i];
+        psum = *my_data->dstR[i] + *my_data->dstG[i] + *my_data->dstB[i];
         if (sum > psum) {
            my_data->dstR[i] = my_data->dstG[i] = my_data->dstB[i] = 0;
         } else {
@@ -340,8 +340,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
 
     unsigned psum {};
 
-
-    /*for(int i= 0; i < MAX_THREADS; i++){
+    for(int i= 0; i < MAX_THREADS; i++){
         thread_data_array[i].thread_id = i;
         thread_data_array[i].thread_amount = MAX_THREADS;
         thread_data_array[i].nump = nump;
@@ -356,7 +355,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
             threadUpdateImg,
             (void*) &thread_data_array[i]
         );
-    }*/
+    }
 
     return 0;
 }
