@@ -227,8 +227,12 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
 
     double w[Gauss::max_radius] {};
     Gauss::get_weights(radius, w);
+
     double *w_ptr;
     w_ptr = w;
+
+    Matrix* dst_ptr = dst;
+    Matrix* scratch_ptr = scratch;
 
     //cache value frequently used, never changed
     const auto dstXsize = dst.get_x_size();
@@ -257,8 +261,8 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         thread_data_array[i].thread_amount = MAX_THREADS;
         thread_data_array[i].radius = radius;
         thread_data_array[i].w = w_ptr;
-        thread_data_array[i].dst = &dst;
-        thread_data_array[i].scratch = &scratch
+        thread_data_array[i].dst = dst_ptr;
+        thread_data_array[i].scratch = scratch_ptr;
 
         //create threads and run threadSum, thread_data_array is passed as a parameter
         pthread_create(
