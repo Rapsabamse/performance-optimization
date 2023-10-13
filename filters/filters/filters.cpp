@@ -284,7 +284,7 @@ void *threadUpdateImg(void * thread_arg){
     //Jump the amount of threads
     //unsigned sum = *my_data->sum;
     //unsigned psum {};
-    std::cout << "sum: " << sum << " nump: " << my_data->nump << "\n";
+    //std::cout << "sum: " << sum << " nump: " << my_data->nump << "\n";
     /*for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount) {
         psum = my_data->dstR[i] + my_data->dstG[i] + my_data->dstB[i];
         if (sum > psum) {
@@ -293,7 +293,7 @@ void *threadUpdateImg(void * thread_arg){
             //my_data->dstR[i] = my_data->dstG[i] = my_data->dstB[i] = 255;
         }
     }*/
-    //pthread_exit(NULL);
+    pthread_exit(NULL);
 }
 
 Matrix threshold_par(Matrix &m, const int MAX_THREADS)
@@ -357,7 +357,9 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
             (void*) &thread_data_array[i]
         );
     }
-
+    for (auto i { 0 } ; i < MAX_THREADS; i++) {
+        pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
+    }
     /*for (auto i { 0 }; i < nump; i++) {
         //psum = dst.r(i, 0) + dst.g(i, 0) + dst.b(i, 0);
         psum = dstR[i] + dstG[i] + dstB[i];
