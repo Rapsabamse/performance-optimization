@@ -255,7 +255,7 @@ struct thread_data{
 };
 
 pthread_mutex_t lock;
-void *threadFunc(void * thread_arg){
+void *threadSum(void * thread_arg){
     struct thread_data *my_data;
     my_data = (struct thread_data *) thread_arg;
 
@@ -273,6 +273,25 @@ void *threadFunc(void * thread_arg){
     *my_data->sum+= thread_sum;
 
     pthread_mutex_unlock(&lock);
+    pthread_exit(NULL);
+}
+
+void *threadUpdateImg(void * thread_arg){
+    struct thread_data *my_data;
+    my_data = (struct thread_data *) thread_arg;
+
+    //Start at thread id
+    //Jump the amount of threads
+    int sum = *my_data->sum;
+    unsigned psum {};
+    for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount) {
+        psum = dstR[i] + dstG[i] + dstB[i];
+        if (sum > psum) {
+            dstR2[i] = dstG2[i] = dstB2[i] = 0;
+        } else {
+            dstR2[i] = dstG2[i] = dstB2[i] = 255;
+        }
+    }
     pthread_exit(NULL);
 }
 
@@ -302,7 +321,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
         pthread_create(
             &p_threads[i],
             NULL,
-            threadFunc,
+            threadSum,
             (void*) &thread_data_array[i]
         );
     }
@@ -319,6 +338,23 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
     auto dstR2 = m.get_R_nonconst();
     auto dstG2 = m.get_G_nonconst();
     auto dstB2 = m.get_B_nonconst();
+
+    for(int i= 0; i < MAX_THREADS; i++){
+        thread_data_array[i].thread_id = i;
+        thread_data_array[i].thread_amount = MAX_THREADS;
+        thread_data_array[i].nump = nump;
+        thread_data_array[i].dstR = dstR2;
+        thread_data_array[i].dstG = dstG2;
+        thread_data_array[i].dstB = dstB2;
+        thread_data_array[i].sum = &sum;
+
+        pthread_create(
+            &p_threads[i],
+            NULL,
+            threadUpdateImg,
+            (void*) &thread_data_array[i]
+        );
+    }
 
     for (auto i { 0 }; i < nump; i++) {
         //psum = dst.r(i, 0) + dst.g(i, 0) + dst.b(i, 0);
