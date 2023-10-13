@@ -217,6 +217,25 @@ void *threadblurX(void * thread_arg){
         }
     }
     pthread_exit(NULL);
+}
+void *threadblurY(void * thread_arg){
+    struct thread_data_blur *my_data;
+    my_data = (struct thread_data_blur *) thread_arg;
+
+    int radius = my_data->radius;
+    double* w = my_data->w;
+
+    int dstXsize = my_data->dstMatrix_x;
+    int dstYsize = my_data->dstMatrix_y;
+    int scrXsize = my_data->scrMatrix_x;
+
+    unsigned char* dstR = my_data->dstR;
+    unsigned char* dstG = my_data->dstG;
+    unsigned char* dstB = my_data->dstB;
+
+    unsigned char* scrR = my_data->scrR;
+    unsigned char* scrG = my_data->scrG;
+    unsigned char* scrB = my_data->scrB;
 
     for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
@@ -317,6 +336,48 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
     }
 
+    /*for (auto x { 0 }; x < dstXsize; x++) {
+        for (auto y { 0 }; y < dstYSize; y++) {
+            auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
+
+            for (auto wi { 1 }; wi <= radius; wi++) {
+                auto wc { w[wi] };
+                auto y2 { y - wi };
+                if (y2 >= 0) {
+                    r += wc * scrR[y2 * scrXsize + x];
+                    g += wc * scrG[y2 * scrXsize + x];
+                    b += wc * scrB[y2 * scrXsize + x];
+                    n += wc;
+                }
+                y2 = y + wi;
+                if (y2 < dstYSize) {
+                    r += wc * scrR[y2 * scrXsize + x];
+                    g += wc * scrG[y2 * scrXsize + x];
+                    b += wc * scrB[y2 * scrXsize + x];
+                    n += wc;
+                }
+            }
+
+            dstR[y * dstXsize + x] = r / n;
+            dstG[y * dstXsize + x] = g / n;
+            dstB[y * dstXsize + x] = b / n;
+        }
+    }*/
+
+    //Add values for the thread_data_array to be used in function
+    for(int i= 0; i < MAX_THREADS; i++){
+        //create threads and run threadSum, thread_data_array is passed as a parameter
+        pthread_create(
+            &p_threads[i],
+            NULL,
+            threadblurY,
+            (void*) &thread_data_array[i]
+        );
+    }
+
+    for (auto i { 0 } ; i < MAX_THREADS; i++) {
+        pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
+    }
     return dst;
 }
 
