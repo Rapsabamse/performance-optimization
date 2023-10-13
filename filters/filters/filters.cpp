@@ -174,7 +174,8 @@ void *threadblurX(void * thread_arg){
     int dstXsize = my_data->dstMatrix_x;
     int dstYsize = my_data->dstMatrix_y;
     int scrXsize = my_data->dstMatrix_x;
-    double w[Gauss::max_radius] = my_data->w;
+    double w[Gauss::max_radius] {};
+    w = my_data->w;
     unsigned char* dstR = my_data->dstR;
     unsigned char* dstG = my_data->dstG;
     unsigned char* dstB = my_data->dstB;
