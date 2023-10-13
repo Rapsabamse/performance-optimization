@@ -231,8 +231,8 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
     double *w_ptr;
     w_ptr = w;
 
-    Matrix* dst_ptr = dst;
-    Matrix* scratch_ptr = scratch;
+    Matrix* dst_ptr = &dst;
+    Matrix* scratch_ptr = &scratch;
 
     //cache value frequently used, never changed
     const auto dstXsize = dst.get_x_size();
