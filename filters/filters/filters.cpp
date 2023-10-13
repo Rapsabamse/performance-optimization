@@ -175,7 +175,7 @@ void *threadblurX(void * thread_arg){
     std::cout << "ran";
     int radius = my_data->radius;
     double* w = my_data->w;
-    /*int dstXsize = my_data->dstMatrix_x;
+    int dstXsize = my_data->dstMatrix_x;
     int dstYsize = my_data->dstMatrix_y;
     int scrXsize = my_data->dstMatrix_x;
     unsigned char* dstR = my_data->dstR;
@@ -185,7 +185,7 @@ void *threadblurX(void * thread_arg){
     unsigned char* scrG = my_data->scrG;
     unsigned char* scrB = my_data->scrB;
 
-    for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
+    /*for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
             //auto r { my_data->w[0] * dst.r(x, y) }, g { my_data->w[0] * dst.g(x, y) }, b { my_data->w[0] * dst.b(x, y) }, n { my_data->w[0] };
             auto r { my_data->w[0] * dstR[y * dstXsize + x] },
