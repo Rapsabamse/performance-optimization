@@ -154,7 +154,7 @@ struct thread_data_blur{
         int thread_id;
         int thread_amount;
         int radius;
-        double w[Gauss::max_radius]*;
+        double w*;
         int dstMatrix_x;
         int dstMatrix_y;
         int scrMatrix_x;
