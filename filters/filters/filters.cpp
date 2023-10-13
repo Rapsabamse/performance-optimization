@@ -284,6 +284,7 @@ void *threadUpdateImg(void * thread_arg){
     //Jump the amount of threads
     unsigned sum = *my_data->sum;
     unsigned psum {};
+    std::cout << "sum: " << sum << " nump: " << my_data->nump << "\n";
     for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount) {
         psum = my_data->dstR[i] + my_data->dstG[i] + my_data->dstB[i];
         if (sum > psum) {
@@ -339,29 +340,25 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
     sum /= nump;
 
     unsigned psum {};
-
-
-    struct thread_data thread_data_array2[MAX_THREADS];
-    pthread_t p_threads2[MAX_THREADS];
+    std::cout << "realsum: " << sum << " real nump = " << nump << "\n\n";
     for(int i= 0; i < MAX_THREADS; i++){
-        thread_data_array2[i].thread_id = i;
-        thread_data_array2[i].thread_amount = MAX_THREADS;
-        thread_data_array2[i].nump = nump;
-        thread_data_array2[i].dstR = dstR;
-        thread_data_array2[i].dstG = dstG;
-        thread_data_array2[i].dstB = dstB;
-        thread_data_array2[i].sum = &sum;
+        thread_data_array[i].thread_id = i;
+        thread_data_array[i].thread_amount = MAX_THREADS;
+        thread_data_array[i].nump = nump;
+        thread_data_array[i].dstR = dstR;
+        thread_data_array[i].dstG = dstG;
+        thread_data_array[i].dstB = dstB;
+        thread_data_array[i].sum = &sum;
 
         pthread_create(
-            &p_threads2[i],
+            &p_threads[i],
             NULL,
             threadUpdateImg,
             (void*) &thread_data_array[i]
         );
     }
 
-    /*
-    for (auto i { 0 }; i < nump; i++) {
+    /*for (auto i { 0 }; i < nump; i++) {
         //psum = dst.r(i, 0) + dst.g(i, 0) + dst.b(i, 0);
         psum = dstR[i] + dstG[i] + dstB[i];
         if (sum > psum) {
