@@ -237,7 +237,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         thread_data_array[i].thread_amount = MAX_THREADS;
         thread_data_array[i].radius = radius;
         thread_data_array[i].dstMatrix_x;
-        thread_data_array[i].dstMartix_y;
+        thread_data_array[i].dstMatrix_y;
         thread_data_array[i].scrMatrix_x;
         thread_data_array[i].dstR = dstR;
         thread_data_array[i].dstG = dstG;
