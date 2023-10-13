@@ -169,10 +169,11 @@ struct thread_data_blur{
 };
 
 void *threadblurX(void * thread_arg){
-    std::cout << "ran";
     struct thread_data_blur *my_data;
     my_data = (struct thread_data_blur *) thread_arg;
-    int radius = my_data->radius;
+
+    std::cout << "ran";
+    /*int radius = my_data->radius;
     double* w = my_data->w;
     int dstXsize = my_data->dstMatrix_x;
     int dstYsize = my_data->dstMatrix_y;
@@ -213,7 +214,7 @@ void *threadblurX(void * thread_arg){
             scrG[y * scrXsize + x] = g / n;
             scrB[y * scrXsize + x] = b / n;
         }
-    }
+    }*/
 
     pthread_exit(NULL);
 }
