@@ -298,7 +298,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
     }
 
-    int x_loop = 0;
+    /*int x_loop = 0;
     int y_loop = 0;
     int wi_loop = 0;
     for (auto x { 0 }; x < dstXsize; x++) {
@@ -330,7 +330,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         }
         x_loop++;
     }
-    std::cout << "Real loops:  (x,y,wi)" << x_loop << "," << y_loop << "," << wi_loop << "\n\n";
+    std::cout << "Real loops:  (x,y,wi)" << x_loop << "," << y_loop << "," << wi_loop << "\n\n";*/
     for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYSize; y++) {
             auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
