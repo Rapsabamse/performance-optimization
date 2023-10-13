@@ -248,9 +248,9 @@ struct thread_data{
         int thread_id;
         int thread_amount;
         int nump;
-        const unsigned char* dstR;
-        const unsigned char* dstG;
-        const unsigned char* dstB;
+        unsigned char* dstR;
+        unsigned char* dstG;
+        unsigned char* dstB;
         unsigned int* sum;
 };
 
@@ -300,9 +300,15 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
     unsigned sum {}, nump { m.get_x_size() * m.get_y_size() };
 
     //pointers for r,g,b in dst matrix
-    auto dstR = m.get_R();
-    auto dstG = m.get_G();
-    auto dstB = m.get_B();
+    //auto dstR = m.get_R();
+    //auto dstG = m.get_G();
+    //auto dstB = m.get_B();
+
+
+    //non constant pointers so values can be changed
+    auto dstR = m.get_R_nonconst();
+    auto dstG = m.get_G_nonconst();
+    auto dstB = m.get_B_nonconst();
 
     struct thread_data thread_data_array[MAX_THREADS];
     pthread_t p_threads[MAX_THREADS];
@@ -334,18 +340,14 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
 
     unsigned psum {};
 
-    //non constant pointers so values can be changed
-    auto dstR2 = m.get_R_nonconst();
-    auto dstG2 = m.get_G_nonconst();
-    auto dstB2 = m.get_B_nonconst();
 
     for(int i= 0; i < MAX_THREADS; i++){
         thread_data_array[i].thread_id = i;
         thread_data_array[i].thread_amount = MAX_THREADS;
         thread_data_array[i].nump = nump;
-        thread_data_array[i].dstR = dstR2;
-        thread_data_array[i].dstG = dstG2;
-        thread_data_array[i].dstB = dstB2;
+        thread_data_array[i].dstR = dstR;
+        thread_data_array[i].dstG = dstG;
+        thread_data_array[i].dstB = dstB;
         thread_data_array[i].sum = &sum;
 
         pthread_create(
@@ -354,18 +356,6 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
             threadUpdateImg,
             (void*) &thread_data_array[i]
         );
-    }
-
-    for (auto i { 0 }; i < nump; i++) {
-        //psum = dst.r(i, 0) + dst.g(i, 0) + dst.b(i, 0);
-        psum = dstR[i] + dstG[i] + dstB[i];
-        if (sum > psum) {
-            //dst.r(i, 0) = dst.g(i, 0) = dst.b(i, 0) = 0;
-            dstR2[i] = dstG2[i] = dstB2[i] = 0;
-        } else {
-            //dst.r(i, 0) = dst.g(i, 0) = dst.b(i, 0) = 255;
-            dstR2[i] = dstG2[i] = dstB2[i] = 255;
-        }
     }
 
     return 0;
