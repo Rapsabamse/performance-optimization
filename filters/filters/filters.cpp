@@ -239,7 +239,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
     const auto dstXsize = dst.get_x_size();
     const auto dstYSize = dst.get_y_size();
     std::cout << "Real x size: " << dstXsize << " Real y size: " << dstYSize;
-    std::cout << "Real w: " << w[0] <<"\n\n"
+    std::cout << "Real w: " << w[0] <<"\n\n";
     //pointers for r,g,b dst matrix
     //non constant pointers so values can be changed
     auto dstR = dst.get_R_nonconst();
