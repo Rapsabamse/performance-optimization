@@ -287,9 +287,9 @@ void *threadUpdateImg(void * thread_arg){
     for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount) {
         psum = dstR[i] + dstG[i] + dstB[i];
         if (sum > psum) {
-            dstR2[i] = dstG2[i] = dstB2[i] = 0;
+           my_data->dstR2[i] = my_data->dstG2[i] = my_data->dstB2[i] = 0;
         } else {
-            dstR2[i] = dstG2[i] = dstB2[i] = 255;
+            my_data->dstR2[i] = my_data->dstG2[i] = my_data->dstB2[i] = 255;
         }
     }
     pthread_exit(NULL);
