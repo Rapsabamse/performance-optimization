@@ -340,14 +340,6 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
     sum /= nump;
 
     for(int i= 0; i < MAX_THREADS; i++){
-        thread_data_array[i].thread_id = i;
-        thread_data_array[i].thread_amount = MAX_THREADS;
-        thread_data_array[i].nump = nump;
-        thread_data_array[i].dstR = dstR;
-        thread_data_array[i].dstG = dstG;
-        thread_data_array[i].dstB = dstB;
-        thread_data_array[i].sum = &sum;
-
         pthread_create(
             &p_threads[i],
             NULL,
@@ -358,17 +350,6 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
     for (auto i { 0 } ; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
     }
-    /*for (auto i { 0 }; i < nump; i++) {
-        //psum = dst.r(i, 0) + dst.g(i, 0) + dst.b(i, 0);
-        psum = dstR[i] + dstG[i] + dstB[i];
-        if (sum > psum) {
-            //dst.r(i, 0) = dst.g(i, 0) = dst.b(i, 0) = 0;
-            dstR[i] = dstG[i] = dstB[i] = 0;
-        } else {
-            //dst.r(i, 0) = dst.g(i, 0) = dst.b(i, 0) = 255;
-            dstR[i] = dstG[i] = dstB[i] = 255;
-        }
-    }*/
 
     return 0;
 }
