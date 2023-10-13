@@ -154,10 +154,12 @@ struct thread_data_blur{
         int thread_id;
         int thread_amount;
         int radius;
-        double (*)[1000] w;
+        double* w;
+
         int dstMatrix_x;
         int dstMatrix_y;
         int scrMatrix_x;
+
         unsigned char* dstR;
         unsigned char* dstG;
         unsigned char* dstB;
@@ -185,13 +187,13 @@ void *threadblurX(void * thread_arg){
     for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
             //auto r { my_data->w[0] * dst.r(x, y) }, g { my_data->w[0] * dst.g(x, y) }, b { my_data->w[0] * dst.b(x, y) }, n { my_data->w[0] };
-            auto r { my_data->*w[0] * dstR[y * dstXsize + x] },
-                g { my_data->*w[0] * dstG[y * dstXsize + x] },
-                b { my_data->*w[0] * dstB[y * dstXsize + x] },
-                n { my_data->*w[0] };
+            auto r { my_data->w[0] * dstR[y * dstXsize + x] },
+                g { my_data->w[0] * dstG[y * dstXsize + x] },
+                b { my_data->w[0] * dstB[y * dstXsize + x] },
+                n { my_data->w[0] };
 
             for (auto wi { 1 }; wi <= radius; wi++) {
-                auto wc { *w[wi] };
+                auto wc { w[wi] };
                 auto x2 { x - wi };
                 if (x2 >= 0) {
                     r += wc * dstR[y * dstXsize + x2];
@@ -252,9 +254,13 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         thread_data_array[i].thread_amount = MAX_THREADS;
         thread_data_array[i].radius = radius;
         thread_data_array[i].w = &w;
+
+        //Sizes of matrixes
         thread_data_array[i].dstMatrix_x;
         thread_data_array[i].dstMatrix_y;
         thread_data_array[i].scrMatrix_x;
+
+        //pointers to colors
         thread_data_array[i].dstR = dstR;
         thread_data_array[i].dstG = dstG;
         thread_data_array[i].dstB = dstB;
