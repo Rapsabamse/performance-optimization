@@ -290,7 +290,7 @@ void *threadUpdateImg(void * thread_arg){
            my_data->dstR[i] = my_data->dstG[i] = my_data->dstB[i] = 0;
         } else {
             my_data->dstR[i] = my_data->dstG[i] = my_data->dstB[i] = 255;
-            std::cout << " | ran on:" << i;
+            std::cout << " | ran on:" << i << "nump: " << my_data->nump;
         }
     }
 
