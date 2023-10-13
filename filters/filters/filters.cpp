@@ -282,7 +282,7 @@ void *threadUpdateImg(void * thread_arg){
 
     //Start at thread id
     //Jump the amount of threads
-    //unsigned sum = *my_data->sum;
+    unsigned sum = *my_data->sum;
     //unsigned psum {};
     std::cout << "sum: " << sum << " nump: " << my_data->nump << "\n";
     /*for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount) {
