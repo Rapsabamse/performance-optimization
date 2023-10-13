@@ -238,10 +238,8 @@ void *threadblurY(void * thread_arg){
     unsigned char* scrB = my_data->scrB;
 
     //int a = 0;
-    //for (auto x { 0 }; x < dstXsize; x++) {
-        //for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
     for (auto x { 0 }; x < dstXsize; x++) {
-        for (auto y { 0 }; y < dstYsize; y++) {
+        for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
             //auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
             auto r { my_data->w[0] * scrR[y * scrXsize + x] },
                 g { my_data->w[0] * scrG[y * scrXsize + x] },
