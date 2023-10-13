@@ -246,7 +246,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
 
 struct thread_data{
         int thread_id;
-        int thread_number;
+        int thread_amount;
         int nump;
         const unsigned char* dstR;
         const unsigned char* dstG;
@@ -262,13 +262,16 @@ void *threadFunc(void * thread_arg){
     //Start at thread id
     //Jump the amount of threads
     int thread_sum = 0;
-    for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_number) {
+    for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount) {
         thread_sum += my_data->dstR[i] + my_data->dstG[i] + my_data->dstB[i];
     }
 
     //Lock mutex so multiple threads cant write at the same time, prevent race conditions
     pthread_mutex_lock(&lock);
+
+    //Put threads sum into the shared sum variable
     *my_data->sum+= thread_sum;
+
     pthread_mutex_unlock(&lock);
     pthread_exit(NULL);
 }
@@ -289,7 +292,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
 
     for(int i= 0; i < MAX_THREADS; i++){
         thread_data_array[i].thread_id = i;
-        thread_data_array[i].thread_number = MAX_THREADS;
+        thread_data_array[i].thread_amount = MAX_THREADS;
         thread_data_array[i].nump = nump;
         thread_data_array[i].dstR = dstR;
         thread_data_array[i].dstG = dstG;
