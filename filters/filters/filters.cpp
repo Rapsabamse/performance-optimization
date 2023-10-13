@@ -153,6 +153,7 @@ Matrix threshold(Matrix &m)
 //parallelised versions
 Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
 {
+    std::cout << "Thread:" << MAX_THREADS << "\n";
     Matrix scratch { PPM::max_dimension };
 
     double w[Gauss::max_radius] {};
@@ -162,25 +163,17 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
     const auto dstXsize = dst.get_x_size();
     const auto dstYSize = dst.get_y_size();
 
-    //pointers for r,g,b in dst matrix
-    auto dstR = dst.get_R();
-    auto dstG = dst.get_G();
-    auto dstB = dst.get_B();
-
+    //pointers for r,g,b dst matrix
     //non constant pointers so values can be changed
-    auto dstRnonCon = dst.get_R_nonconst();
-    auto dstGnonCon = dst.get_G_nonconst();
-    auto dstBnonCon = dst.get_B_nonconst();
+    auto dstR = dst.get_R_nonconst();
+    auto dstG = dst.get_G_nonconst();
+    auto dstB = dst.get_B_nonconst();
 
     //pointers for r,g,b scratch matrix
-    auto scrR = scratch.get_R();
-    auto scrG = scratch.get_G();
-    auto scrB = scratch.get_B();
-
     //non constant pointers so values can be changed
-    auto scrRnonCon = scratch.get_R_nonconst();
-    auto scrGnonCon = scratch.get_G_nonconst();
-    auto scrBnonCon = scratch.get_B_nonconst();
+    auto scrR = scratch.get_R_nonconst();
+    auto scrG = scratch.get_G_nonconst();
+    auto scrB = scratch.get_B_nonconst();
 
     const auto scrXsize = scratch.get_x_size();
 
@@ -205,9 +198,9 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
                     n += wc;
                 }
             }
-            scrRnonCon[y * scrXsize + x] = r / n;
-            scrGnonCon[y * scrXsize + x] = g / n;
-            scrBnonCon[y * scrXsize + x] = b / n;
+            scrR[y * scrXsize + x] = r / n;
+            scrG[y * scrXsize + x] = g / n;
+            scrB[y * scrXsize + x] = b / n;
         }
     }
 
@@ -233,9 +226,9 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
                 }
             }
 
-            dstRnonCon[y * dstXsize + x] = r / n;
-            dstGnonCon[y * dstXsize + x] = g / n;
-            dstBnonCon[y * dstXsize + x] = b / n;
+            dstR[y * dstXsize + x] = r / n;
+            dstG[y * dstXsize + x] = g / n;
+            dstB[y * dstXsize + x] = b / n;
         }
     }
 
