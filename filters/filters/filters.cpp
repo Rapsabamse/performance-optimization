@@ -196,7 +196,7 @@ void *threadblurX(void * thread_arg){
                 b { my_data->w[0] * dstB[y * dstXsize + x] },
                 n { my_data->w[0] };
 
-            /*for (auto wi { 1 }; wi <= radius; wi++) {
+            for (auto wi { 1 }; wi <= radius; wi++) {
                 auto wc { w[wi] };
                 auto x2 { x - wi };
                 if (x2 >= 0) {
@@ -212,10 +212,10 @@ void *threadblurX(void * thread_arg){
                     b += wc * dstB[y * dstXsize + x2];
                     n += wc;
                 }
-            }*/
-            //scrR[y * scrXsize + x] = r / n;
-            //scrG[y * scrXsize + x] = g / n;
-            //scrB[y * scrXsize + x] = b / n;
+            }
+            scrR[y * scrXsize + x] = r / n;
+            scrG[y * scrXsize + x] = g / n;
+            scrB[y * scrXsize + x] = b / n;
         }
     }
 
