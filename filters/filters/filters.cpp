@@ -187,17 +187,8 @@ void *threadblurX(void * thread_arg){
     unsigned char* scrG = my_data->scrG;
     unsigned char* scrB = my_data->scrB;
 
-    //std::cout << "thread id: " << my_data->thread_id << " thread_amount: " << my_data->thread_amount;
-    //std::cout << " dstXSize: " << dstXsize << " dstYsize: " << dstYsize;
-    //std::cout << " W: " << w[0] <<"\n\n";
-
-    int x_loop = 0;
-    int y_loop = 0;
-    int wi_loop = 0;
-    //auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount;
     for (auto x { 0 }; x < dstXsize; x ++) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
-            //auto r { my_data->w[0] * dst.r(x, y) }, g { my_data->w[0] * dst.g(x, y) }, b { my_data->w[0] * dst.b(x, y) }, n { my_data->w[0] };
             auto r { my_data->w[0] * dstR[y * dstXsize + x] },
                 g { my_data->w[0] * dstG[y * dstXsize + x] },
                 b { my_data->w[0] * dstB[y * dstXsize + x] },
@@ -219,17 +210,45 @@ void *threadblurX(void * thread_arg){
                     b += wc * dstB[y * dstXsize + x2];
                     n += wc;
                 }
-                wi_loop++;
             }
             scrR[y * scrXsize + x] = r / n;
             scrG[y * scrXsize + x] = g / n;
             scrB[y * scrXsize + x] = b / n;
-            y_loop++;
         }
-        x_loop++;
     }
-    //std::cout << "Loops:  (x,y,wi)" << x_loop << "," << y_loop << "," << wi_loop << "\n\n";
     pthread_exit(NULL);
+
+    for (auto x { 0 }; x < dstXsize; x++) {
+        for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
+            //auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
+            auto r { my_data->w[0] * dstR[y * dstXsize + x] },
+                g { my_data->w[0] * dstG[y * dstXsize + x] },
+                b { my_data->w[0] * dstB[y * dstXsize + x] },
+                n { my_data->w[0] };
+
+            for (auto wi { 1 }; wi <= radius; wi++) {
+                auto wc { w[wi] };
+                auto y2 { y - wi };
+                if (y2 >= 0) {
+                    r += wc * scrR[y2 * scrXsize + x];
+                    g += wc * scrG[y2 * scrXsize + x];
+                    b += wc * scrB[y2 * scrXsize + x];
+                    n += wc;
+                }
+                y2 = y + wi;
+                if (y2 < dstYSize) {
+                    r += wc * scrR[y2 * scrXsize + x];
+                    g += wc * scrG[y2 * scrXsize + x];
+                    b += wc * scrB[y2 * scrXsize + x];
+                    n += wc;
+                }
+            }
+
+            dstR[y * dstXsize + x] = r / n;
+            dstG[y * dstXsize + x] = g / n;
+            dstB[y * dstXsize + x] = b / n;
+        }
+    }
 }
 
 //parallelised versions
@@ -296,67 +315,6 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
 
     for (auto i { 0 } ; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
-    }
-
-    /*int x_loop = 0;
-    int y_loop = 0;
-    int wi_loop = 0;
-    for (auto x { 0 }; x < dstXsize; x++) {
-        for (auto y { 0 }; y < dstYSize; y++) {
-            auto r { w[0] * dst.r(x, y) }, g { w[0] * dst.g(x, y) }, b { w[0] * dst.b(x, y) }, n { w[0] };
-
-            for (auto wi { 1 }; wi <= radius; wi++) {
-                auto wc { w[wi] };
-                auto x2 { x - wi };
-                if (x2 >= 0) {
-                    r += wc * dstR[y * dstXsize + x2];
-                    g += wc * dstG[y * dstXsize + x2];
-                    b += wc * dstB[y * dstXsize + x2];
-                    n += wc;
-                }
-                x2 = x + wi;
-                if (x2 < dstXsize) {
-                    r += wc * dstR[y * dstXsize + x2];
-                    g += wc * dstG[y * dstXsize + x2];
-                    b += wc * dstB[y * dstXsize + x2];
-                    n += wc;
-                }
-                wi_loop++;
-            }
-            scrR[y * scrXsize + x] = r / n;
-            scrG[y * scrXsize + x] = g / n;
-            scrB[y * scrXsize + x] = b / n;
-            y_loop++;
-        }
-        x_loop++;
-    }
-    std::cout << "Real loops:  (x,y,wi)" << x_loop << "," << y_loop << "," << wi_loop << "\n\n";*/
-    for (auto x { 0 }; x < dstXsize; x++) {
-        for (auto y { 0 }; y < dstYSize; y++) {
-            auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
-
-            for (auto wi { 1 }; wi <= radius; wi++) {
-                auto wc { w[wi] };
-                auto y2 { y - wi };
-                if (y2 >= 0) {
-                    r += wc * scrR[y2 * scrXsize + x];
-                    g += wc * scrG[y2 * scrXsize + x];
-                    b += wc * scrB[y2 * scrXsize + x];
-                    n += wc;
-                }
-                y2 = y + wi;
-                if (y2 < dstYSize) {
-                    r += wc * scrR[y2 * scrXsize + x];
-                    g += wc * scrG[y2 * scrXsize + x];
-                    b += wc * scrB[y2 * scrXsize + x];
-                    n += wc;
-                }
-            }
-
-            dstR[y * dstXsize + x] = r / n;
-            dstG[y * dstXsize + x] = g / n;
-            dstB[y * dstXsize + x] = b / n;
-        }
     }
 
     return dst;
