@@ -155,17 +155,8 @@ struct thread_data_blur{
         int thread_amount;
         int radius;
         double* w;
-
-        int dstMatrix_x;
-        int dstMatrix_y;
-        int scrMatrix_x;
-
-        unsigned char* dstR;
-        unsigned char* dstG;
-        unsigned char* dstB;
-        unsigned char* scrR;
-        unsigned char* scrG;
-        unsigned char* scrB;
+        Matrix* dst;
+        Matrix* scratch;
 };
 
 void *threadblurX(void * thread_arg){
@@ -176,16 +167,23 @@ void *threadblurX(void * thread_arg){
     int radius = my_data->radius;
     double* w = my_data->w;
 
-    int dstXsize = my_data->dstMatrix_x;
-    int dstYsize = my_data->dstMatrix_y;
-    int scrXsize = my_data->dstMatrix_x;
+    //cache value frequently used, never changed
+    const auto dstXsize = my_data->dst.get_x_size();
+    const auto dstYSize = my_data->dst.get_y_size();
 
-    unsigned char* dstR = my_data->dstR;
-    unsigned char* dstG = my_data->dstG;
-    unsigned char* dstB = my_data->dstB;
-    unsigned char* scrR = my_data->scrR;
-    unsigned char* scrG = my_data->scrG;
-    unsigned char* scrB = my_data->scrB;
+    //pointers for r,g,b dst matrix
+    //non constant pointers so values can be changed
+    auto dstR = my_data->dst.get_R_nonconst();
+    auto dstG = my_data->dst.get_G_nonconst();
+    auto dstB = my_data->dst.get_B_nonconst();
+
+    //pointers for r,g,b scratch matrix
+    //non constant pointers so values can be changed
+    auto scrR = my_data->scratch.get_R_nonconst();
+    auto scrG = my_data->scratch.get_G_nonconst();
+    auto scrB = my_data->scratch.get_B_nonconst();
+
+    const auto scrXsize = my_data->scratch.get_x_size();
 
     for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
@@ -259,19 +257,8 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         thread_data_array[i].thread_amount = MAX_THREADS;
         thread_data_array[i].radius = radius;
         thread_data_array[i].w = w_ptr;
-
-        //Sizes of matrixes
-        thread_data_array[i].dstMatrix_x;
-        thread_data_array[i].dstMatrix_y;
-        thread_data_array[i].scrMatrix_x;
-
-        //pointers to colors
-        thread_data_array[i].dstR = dstR;
-        thread_data_array[i].dstG = dstG;
-        thread_data_array[i].dstB = dstB;
-        thread_data_array[i].scrR = scrR;
-        thread_data_array[i].scrG = scrG;
-        thread_data_array[i].scrB = scrB;
+        thread_data_array[i].dst = &dst;
+        thread_data_array[i].scratch = &scratch
 
         //create threads and run threadSum, thread_data_array is passed as a parameter
         pthread_create(
