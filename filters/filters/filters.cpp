@@ -217,36 +217,7 @@ void *threadblurX(void * thread_arg){
         }
     }
 
-    for (auto x { 0 }; x < dstXsize; x++) {
-        for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
-            auto r { my_data->w[0] * scrR[y * scrXsize + x] },
-                g { my_data->w[0] * scrG[y * scrXsize + x] },
-                b { my_data->w[0] * scrB[y * scrXsize + x] },
-                n { my_data->w[0] };
-
-            for (auto wi { 1 }; wi <= radius; wi++) {
-                auto wc { w[wi] };
-                auto y2 { y - wi };
-                if (y2 >= 0) {
-                    r += wc * scrR[y2 * scrXsize + x];
-                    g += wc * scrG[y2 * scrXsize + x];
-                    b += wc * scrB[y2 * scrXsize + x];
-                    n += wc;
-                }
-                y2 = y + wi;
-                if (y2 < dstYsize) {
-                    r += wc * scrR[y2 * scrXsize + x];
-                    g += wc * scrG[y2 * scrXsize + x];
-                    b += wc * scrB[y2 * scrXsize + x];
-                    n += wc;
-                }
-            }
-
-            dstR[y * dstXsize + x] = r / n;
-            dstG[y * dstXsize + x] = g / n;
-            dstB[y * dstXsize + x] = b / n;
-        }
-    }
+    
     pthread_exit(NULL);
 }
 void *threadblurY(void * thread_arg){
@@ -365,7 +336,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
     }
 
-    /*//Add values for the thread_data_array to be used in function
+    //Add values for the thread_data_array to be used in function
     for(int i= 0; i < MAX_THREADS; i++){
         //create threads and run threadSum, thread_data_array is passed as a parameter
         pthread_create(
@@ -378,7 +349,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
 
     for (auto i { 0 } ; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
-    }*/
+    }
 
     return dst;
 }
