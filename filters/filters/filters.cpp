@@ -186,11 +186,12 @@ void *threadblurX(void * thread_arg){
     unsigned char* scrG = my_data->scrG;
     unsigned char* scrB = my_data->scrB;
 
-    std::cout << "thread id: " << my_data->thread_id << " thread_amount: " << my_data->thread_amount;
-    std::cout << " dstXSize: " << dstXsize << " dstYsize: " << dstYsize << "\n\n";
+    //std::cout << "thread id: " << my_data->thread_id << " thread_amount: " << my_data->thread_amount;
+    //std::cout << " dstXSize: " << dstXsize << " dstYsize: " << dstYsize << "\n\n";
     for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
             //auto r { my_data->w[0] * dst.r(x, y) }, g { my_data->w[0] * dst.g(x, y) }, b { my_data->w[0] * dst.b(x, y) }, n { my_data->w[0] };
+
             auto r { my_data->w[0] * dstR[y * dstXsize + x] },
                 g { my_data->w[0] * dstG[y * dstXsize + x] },
                 b { my_data->w[0] * dstB[y * dstXsize + x] },
@@ -286,33 +287,6 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
     for (auto i { 0 } ; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
     }
-
-    /*for (auto x { 0 }; x < dstXsize; x++) {
-        for (auto y { 0 }; y < dstYSize; y++) {
-            auto r { w[0] * dst.r(x, y) }, g { w[0] * dst.g(x, y) }, b { w[0] * dst.b(x, y) }, n { w[0] };
-
-            for (auto wi { 1 }; wi <= radius; wi++) {
-                auto wc { w[wi] };
-                auto x2 { x - wi };
-                if (x2 >= 0) {
-                    r += wc * dstR[y * dstXsize + x2];
-                    g += wc * dstG[y * dstXsize + x2];
-                    b += wc * dstB[y * dstXsize + x2];
-                    n += wc;
-                }
-                x2 = x + wi;
-                if (x2 < dstXsize) {
-                    r += wc * dstR[y * dstXsize + x2];
-                    g += wc * dstG[y * dstXsize + x2];
-                    b += wc * dstB[y * dstXsize + x2];
-                    n += wc;
-                }
-            }
-            scrR[y * scrXsize + x] = r / n;
-            scrG[y * scrXsize + x] = g / n;
-            scrB[y * scrXsize + x] = b / n;
-        }
-    }*/
 
     for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYSize; y++) {
