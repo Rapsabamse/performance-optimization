@@ -160,6 +160,9 @@ struct thread_data_blur{
         unsigned char* dstR;
         unsigned char* dstG;
         unsigned char* dstB;
+        unsigned char* scrR;
+        unsigned char* scrG;
+        unsigned char* scrB;
 };
 
 void *threadblurX(void * thread_arg){
@@ -173,6 +176,9 @@ void *threadblurX(void * thread_arg){
     unsigned char* dstR = my_data->dstR;
     unsigned char* dstG = my_data->dstG;
     unsigned char* dstB = my_data->dstB;
+    unsigned char* scrR = my_data->scrR;
+    unsigned char* scrG = my_data->scrG;
+    unsigned char* scrB = my_data->scrB;
 
     for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
@@ -245,6 +251,9 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         thread_data_array[i].dstR = dstR;
         thread_data_array[i].dstG = dstG;
         thread_data_array[i].dstB = dstB;
+        thread_data_array[i].scrR = scrR;
+        thread_data_array[i].scrG = scrG;
+        thread_data_array[i].scrB = scrB;
 
         //create threads and run threadSum, thread_data_array is passed as a parameter
         pthread_create(
