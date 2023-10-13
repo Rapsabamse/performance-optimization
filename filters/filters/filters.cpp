@@ -187,9 +187,9 @@ void *threadblurX(void * thread_arg){
     unsigned char* scrG = my_data->scrG;
     unsigned char* scrB = my_data->scrB;
 
-    std::cout << "thread id: " << my_data->thread_id << " thread_amount: " << my_data->thread_amount;
-    std::cout << " dstXSize: " << dstXsize << " dstYsize: " << dstYsize;
-    std::cout << " W: " << w[0] <<"\n\n";
+    //std::cout << "thread id: " << my_data->thread_id << " thread_amount: " << my_data->thread_amount;
+    //std::cout << " dstXSize: " << dstXsize << " dstYsize: " << dstYsize;
+    //std::cout << " W: " << w[0] <<"\n\n";
 
     int x_loop = 0;
     int y_loop = 0;
@@ -228,7 +228,7 @@ void *threadblurX(void * thread_arg){
         }
         x_loop++;
     }
-    std::cout << "Loops:  (x,y,wi)" << x_loop << "," << y_loop << "," << wi_loop << "\n\n";
+    //std::cout << "Loops:  (x,y,wi)" << x_loop << "," << y_loop << "," << wi_loop << "\n\n";
     pthread_exit(NULL);
 }
 
@@ -246,8 +246,8 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
     //cache value frequently used, never changed
     const auto dstXsize = dst.get_x_size();
     const auto dstYSize = dst.get_y_size();
-    std::cout << "Real x size: " << dstXsize << " Real y size: " << dstYSize;
-    std::cout << "Real w: " << w[0] <<"\n\n";
+    //std::cout << "Real x size: " << dstXsize << " Real y size: " << dstYSize;
+    //std::cout << "Real w: " << w[0] <<"\n\n";
     //pointers for r,g,b dst matrix
     //non constant pointers so values can be changed
     auto dstR = dst.get_R_nonconst();
