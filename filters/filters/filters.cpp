@@ -281,7 +281,7 @@ void *threadUpdateImg(void * thread_arg){
     my_data = (struct thread_data *) thread_arg;
 
     //Start at thread id
-    //Jump the amount of threads
+    //Jump the amount of threads, each thread will run trough its own part of the matrix
     unsigned sum = *my_data->sum;
     unsigned psum {};
     for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount) {
@@ -301,11 +301,6 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
     unsigned sum {}, nump { m.get_x_size() * m.get_y_size() };
 
     //pointers for r,g,b in dst matrix
-    //auto dstR = m.get_R();
-    //auto dstG = m.get_G();
-    //auto dstB = m.get_B();
-
-
     //non constant pointers so values can be changed
     auto dstR = m.get_R_nonconst();
     auto dstG = m.get_G_nonconst();
@@ -316,6 +311,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
 
     pthread_mutex_init(&lock, NULL);
 
+    //Add values for the thread_data_array to be used in function
     for(int i= 0; i < MAX_THREADS; i++){
         thread_data_array[i].thread_id = i;
         thread_data_array[i].thread_amount = MAX_THREADS;
@@ -325,6 +321,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
         thread_data_array[i].dstB = dstB;
         thread_data_array[i].sum = &sum;
 
+        //create threads and run threadSum, thread_data_array is passed as a parameter
         pthread_create(
             &p_threads[i],
             NULL,
@@ -339,6 +336,7 @@ Matrix threshold_par(Matrix &m, const int MAX_THREADS)
 
     sum /= nump;
 
+    //Uses same struct as the function above, no need to load values.
     for(int i= 0; i < MAX_THREADS; i++){
         pthread_create(
             &p_threads[i],
