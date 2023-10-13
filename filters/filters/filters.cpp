@@ -240,9 +240,9 @@ void *threadblurY(void * thread_arg){
     for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
             //auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
-            auto r { my_data->w[0] * dstR[y * dstXsize + x] },
-                g { my_data->w[0] * dstG[y * dstXsize + x] },
-                b { my_data->w[0] * dstB[y * dstXsize + x] },
+            auto r { my_data->w[0] * scrR[y * dstXsize + x] },
+                g { my_data->w[0] * scrG[y * dstXsize + x] },
+                b { my_data->w[0] * scrB[y * dstXsize + x] },
                 n { my_data->w[0] };
 
             for (auto wi { 1 }; wi <= radius; wi++) {
@@ -268,6 +268,34 @@ void *threadblurY(void * thread_arg){
             dstB[y * dstXsize + x] = b / n;
         }
     }
+
+    /*for (auto x { 0 }; x < dstXsize; x++) {
+        for (auto y { 0 }; y < dstYSize; y++) {
+            auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
+
+            for (auto wi { 1 }; wi <= radius; wi++) {
+                auto wc { w[wi] };
+                auto y2 { y - wi };
+                if (y2 >= 0) {
+                    r += wc * scrR[y2 * scrXsize + x];
+                    g += wc * scrG[y2 * scrXsize + x];
+                    b += wc * scrB[y2 * scrXsize + x];
+                    n += wc;
+                }
+                y2 = y + wi;
+                if (y2 < dstYSize) {
+                    r += wc * scrR[y2 * scrXsize + x];
+                    g += wc * scrG[y2 * scrXsize + x];
+                    b += wc * scrB[y2 * scrXsize + x];
+                    n += wc;
+                }
+            }
+
+            dstR[y * dstXsize + x] = r / n;
+            dstG[y * dstXsize + x] = g / n;
+            dstB[y * dstXsize + x] = b / n;
+        }
+    }*/
 }
 
 //parallelised versions
@@ -284,8 +312,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
     //cache value frequently used, never changed
     const auto dstXsize = dst.get_x_size();
     const auto dstYSize = dst.get_y_size();
-    //std::cout << "Real x size: " << dstXsize << " Real y size: " << dstYSize;
-    //std::cout << "Real w: " << w[0] <<"\n\n";
+
     //pointers for r,g,b dst matrix
     //non constant pointers so values can be changed
     auto dstR = dst.get_R_nonconst();
@@ -336,7 +363,7 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
     }
 
-    for (auto x { 0 }; x < dstXsize; x++) {
+    /*for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYSize; y++) {
             auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
 
@@ -362,10 +389,10 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
             dstG[y * dstXsize + x] = g / n;
             dstB[y * dstXsize + x] = b / n;
         }
-    }
+    }*/
 
     //Add values for the thread_data_array to be used in function
-    /*for(int i= 0; i < MAX_THREADS; i++){
+    for(int i= 0; i < MAX_THREADS; i++){
         //create threads and run threadSum, thread_data_array is passed as a parameter
         pthread_create(
             &p_threads[i],
@@ -377,7 +404,8 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
 
     for (auto i { 0 } ; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
-    }*/
+    }
+
     return dst;
 }
 
