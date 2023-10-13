@@ -195,7 +195,7 @@ void *threadblurX(void * thread_arg){
     int y_loop = 0;
     int wi_loop = 0;
     //auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount;
-    for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
+    for (auto x { 0 }; x < dstXsize; x ++) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
             //auto r { my_data->w[0] * dst.r(x, y) }, g { my_data->w[0] * dst.g(x, y) }, b { my_data->w[0] * dst.b(x, y) }, n { my_data->w[0] };
             auto r { my_data->w[0] * dstR[y * dstXsize + x] },
