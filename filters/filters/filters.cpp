@@ -282,7 +282,7 @@ void *threadUpdateImg(void * thread_arg){
 
     //Start at thread id
     //Jump the amount of threads
-    int sum = *my_data->sum;
+    unsigned sum = *my_data->sum;
     unsigned psum {};
     for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount) {
         psum = dstR[i] + dstG[i] + dstB[i];
