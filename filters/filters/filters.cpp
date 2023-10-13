@@ -236,7 +236,7 @@ void *threadblurX(void * thread_arg){
                     n += wc;
                 }
                 y2 = y + wi;
-                if (y2 < dstYSize) {
+                if (y2 < dstYsize) {
                     r += wc * scrR[y2 * scrXsize + x];
                     g += wc * scrG[y2 * scrXsize + x];
                     b += wc * scrB[y2 * scrXsize + x];
