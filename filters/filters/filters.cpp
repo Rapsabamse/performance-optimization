@@ -177,11 +177,12 @@ void *threadblurX(void * thread_arg){
 
     int dstXsize = my_data->dstMatrix_x;
     int dstYsize = my_data->dstMatrix_y;
-    int scrXsize = my_data->dstMatrix_x;
+    int scrXsize = my_data->scrMatrix_x;
 
     unsigned char* dstR = my_data->dstR;
     unsigned char* dstG = my_data->dstG;
     unsigned char* dstB = my_data->dstB;
+
     unsigned char* scrR = my_data->scrR;
     unsigned char* scrG = my_data->scrG;
     unsigned char* scrB = my_data->scrB;
@@ -190,7 +191,10 @@ void *threadblurX(void * thread_arg){
     std::cout << " dstXSize: " << dstXsize << " dstYsize: " << dstYsize;
     std::cout << " W: " << w[0] <<"\n\n";
 
-    int a = 0;
+    int x_loop = 0;
+    int y_loop = 0;
+    int wi_loop = 0;
+    auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount
     for (auto x { my_data->thread_id }; x < dstXsize; x += my_data->thread_amount) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
             //auto r { my_data->w[0] * dst.r(x, y) }, g { my_data->w[0] * dst.g(x, y) }, b { my_data->w[0] * dst.b(x, y) }, n { my_data->w[0] };
@@ -215,14 +219,16 @@ void *threadblurX(void * thread_arg){
                     b += wc * dstB[y * dstXsize + x2];
                     n += wc;
                 }
-                a++;
+                wi_loop++;
             }
             scrR[y * scrXsize + x] = r / n;
             scrG[y * scrXsize + x] = g / n;
             scrB[y * scrXsize + x] = b / n;
+            y_loop++;
         }
+        x_loop++;
     }
-    std::cout << "Loops: " << a << "\n\n";
+    std::cout << "Loops:  (x,y,wi)" << x_loop << "," << y_loop << "," << wi_loop << "\n\n";
     pthread_exit(NULL);
 }
 
@@ -291,7 +297,10 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
     for (auto i { 0 } ; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL); // Wait for all threads to terminate
     }
-    int a = 0;
+
+    int x_loop = 0;
+    int y_loop = 0;
+    int wi_loop = 0;
     for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYSize; y++) {
             auto r { w[0] * dst.r(x, y) }, g { w[0] * dst.g(x, y) }, b { w[0] * dst.b(x, y) }, n { w[0] };
@@ -312,14 +321,16 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
                     b += wc * dstB[y * dstXsize + x2];
                     n += wc;
                 }
-                a++;
+                wi_loop++;
             }
             scrR[y * scrXsize + x] = r / n;
             scrG[y * scrXsize + x] = g / n;
             scrB[y * scrXsize + x] = b / n;
+            y_loop++;
         }
+        x_loop++;
     }
-    std::cout << " loops Real: " << a << "\n\n";
+    std::cout << "Real loops:  (x,y,wi)" << x_loop << "," << y_loop << "," << wi_loop << "\n\n";
     for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { 0 }; y < dstYSize; y++) {
             auto r { w[0] * scratch.r(x, y) }, g { w[0] * scratch.g(x, y) }, b { w[0] * scratch.b(x, y) }, n { w[0] };
