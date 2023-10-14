@@ -110,7 +110,7 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
         std::cout << result.at(i) << " ";
     }*/
 
-    return result;
+    return old_result;
 }
 
 double pearson(Vector vec1, Vector vec2)
