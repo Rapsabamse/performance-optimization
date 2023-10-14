@@ -8,19 +8,64 @@ Author: David Holmqvist <daae19@student.bth.se>
 #include <iostream>
 #include <list>
 #include <vector>
+#include <pthread.h>
+
+#define MAX_THREADS 4
 
 namespace Analysis {
 
-std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int MAX_THREADS)
-{
-    std::cout << "\nThreads: " << MAX_THREADS << "\n\n";
-    std::vector<double> result {};
+struct thread_data {
+    unsigned int thread_id;
+    std::vector<Vector>* datasets;
+    std::vector<double>* result;
+    unsigned int number_of_threads;
+    unsigned int* result_index;
+    pthread_mutex_t* lock;
+};
 
-    for (auto sample1 { 0 }; sample1 < datasets.size() - 1; sample1++) {
-        for (auto sample2 { sample1 + 1 }; sample2 < datasets.size(); sample2++) {
-            auto corr { pearson(datasets[sample1], datasets[sample2]) };
-            result.push_back(corr);
+void* correlation_coefficients_par(void* thread_args)
+{
+    thread_data* my_data;
+    my_data = (thread_data*) thread_args;
+
+    unsigned int size = my_data->datasets->size() / my_data->number_of_threads;
+    unsigned int start_index = my_data->thread_id * size;
+    unsigned int end_index = start_index + size;
+
+    for (int sample1 = start_index; sample1 < end_index - 1; sample1++) {
+        for (int sample2 = sample1 + 1; sample2 < end_index; sample2++) {
+            double corr = pearson((*my_data->datasets)[sample1], (*my_data->datasets)[sample2]);
+
+            pthread_mutex_lock(my_data->lock); // prevent race conditions between threads writing to result
+            (*my_data->result).insert(std::begin(*my_data->result) + (*my_data->result_index), corr);
+            (*my_data->result_index)++;
+            pthread_mutex_unlock(my_data->lock);
         }
+    }
+}
+
+std::vector<double> correlation_coefficients(std::vector<Vector> datasets)
+{
+    std::vector<double> result {};
+    unsigned int result_index = 0;
+    pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+
+    thread_data thread_data_array[MAX_THREADS];
+    pthread_t p_threads[MAX_THREADS];
+
+    for (int i = 0; i < MAX_THREADS; i++) {
+        thread_data_array[i].thread_id = i;
+        thread_data_array[i].datasets = &datasets;
+        thread_data_array[i].result = &result;
+        thread_data_array[i].number_of_threads = MAX_THREADS;
+        thread_data_array[i].result_index = &result_index;
+        thread_data_array[i].lock = &lock;
+
+        pthread_create(&p_threads[i], NULL, correlation_coefficients_par, (void*) &thread_data_array[i]);
+    }
+
+    for (int i = 0; i < MAX_THREADS; i++) {
+        pthread_join(p_threads[i], NULL);
     }
 
     return result;
