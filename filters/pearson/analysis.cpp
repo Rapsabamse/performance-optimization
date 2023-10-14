@@ -40,7 +40,7 @@ void* correlation_coefficients_par(void* thread_args)
         for (int sample2 = sample1 + 1; sample2 < end_index; sample2++) {
             double corr = pearson((*my_data->datasets)[sample1], (*my_data->datasets)[sample2]);
             //parResults.push_back(corr);
-            //my_data->result->at(result_i) = corr;
+            my_data->result->at(result_i) = corr;
             //parResults.insert(std::begin(*my_data->result) + (*my_data->result_index), corr);
             //(*my_data->result_index)++;
             result_i++;
@@ -63,8 +63,7 @@ void* correlation_coefficients_par(void* thread_args)
 std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int MAX_THREADS)
 {
     auto vector_size = ( ( datasets.size() * datasets.size() ) - datasets.size() ) / 2;
-    std::cout << "Predicted size: " << vector_size << " ";
-    std::vector<double> result {};
+    std::vector<double> result(vector_size);
 
     unsigned int result_index = 0;
 
@@ -87,7 +86,7 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
         pthread_join(p_threads[i], NULL);
     }
 
-    int a = 0;
+    /*int a = 0;
     for (auto sample1 { 0 }; sample1 < datasets.size() - 1; sample1++) {
         for (auto sample2 { sample1 + 1 }; sample2 < datasets.size(); sample2++) {
             auto corr { pearson(datasets[sample1], datasets[sample2]) };
@@ -97,7 +96,7 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
     }
     std::cout << "Datasetsize: " << datasets.size() << "\n";
     std::cout << "Vector size: " << result.size() << "\n";
-    std::cout << "Real loops: " << a << "\n";
+    std::cout << "Real loops: " << a << "\n";*/
 
     return result;
 }
