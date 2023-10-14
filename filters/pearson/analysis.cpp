@@ -48,8 +48,10 @@ void* correlation_coefficients_par(void* thread_args)
 
     pthread_mutex_lock(&lock); // prevent race conditions between threads writing to result
     std::cout << "Thread " << my_data->thread_id << ":s loops:" << a << "\n";
-    for(auto i { start_index }, auto threadI { 0 } ; i < end_index; i++, threadI++){
-        my_data->result[i] = parResults[threadI];
+    auto thread_i = 0;
+    for(auto i { start_index }; i < end_index; i++){
+        my_data->result[i] = parResults[thread_i];
+        thread_i++;
     }
     //my_data->result->insert(my_data->result. end_index, parResults.begin(), parResults.end());
     pthread_mutex_unlock(&lock);
