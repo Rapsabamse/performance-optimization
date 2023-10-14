@@ -38,7 +38,7 @@ void* correlation_coefficients_par(void* thread_args)
     int a = 0;
     int b = 0;
     int result_i = start_index;
-    std::cout << "Last write: " << result_i << "\n";
+    std::cout <<"Thread: " << my_data->thread_id << " first write: " << result_i << "\n";
     for (int sample1 { start_index }; sample1 < end_index; sample1 ++) {
         for (int sample2 = sample1 + 1; sample2 < my_data->datasets->size(); sample2++) {
             double corr = pearson((*my_data->datasets)[sample1], (*my_data->datasets)[sample2]);
@@ -48,7 +48,7 @@ void* correlation_coefficients_par(void* thread_args)
         }
         a++;
     }
-    std::cout << "Last write: " << result_i << "\n";
+    std::cout <<"Thread: " << my_data->thread_id << " last write: " << result_i << "\n";
     std::cout <<"Thread: " << my_data->thread_id << " Inner loop: " << b << "\n";
     std::cout <<"Thread: " << my_data->thread_id << " Outer loop: " << a << "\n";
 
