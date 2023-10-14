@@ -52,8 +52,8 @@ void *threadVector(void * thread_arg){
 }
 
 Vector::Vector(const Vector& other, int MAX_THREADS)
-    : Vector { other.size }{
-
+    : Vector { other.size }
+{
     struct thread_data_blur thread_data_array[MAX_THREADS];
     pthread_t p_threads[MAX_THREADS];
     for (auto i { 0 }; i < size; i++) {
