@@ -12,19 +12,21 @@ Author: David Holmqvist <daae19@student.bth.se>
 
 namespace Analysis {
 
+pthread_mutex_t lock;
 struct thread_data {
     unsigned int thread_id;
     std::vector<Vector>* datasets;
     std::vector<double>* result;
     unsigned int number_of_threads;
     unsigned int* result_index;
-    pthread_mutex_t* lock;
 };
 
 void* correlation_coefficients_par(void* thread_args)
 {
     thread_data* my_data;
     my_data = (thread_data*) thread_args;
+
+    std::vector<double> parResults;
 
     unsigned int size = my_data->datasets->size() / my_data->number_of_threads;
     unsigned int start_index = my_data->thread_id * size;
@@ -33,23 +35,25 @@ void* correlation_coefficients_par(void* thread_args)
     for (int sample1 = start_index; sample1 < end_index - 1; sample1++) {
         for (int sample2 = sample1 + 1; sample2 < end_index; sample2++) {
             double corr = pearson((*my_data->datasets)[sample1], (*my_data->datasets)[sample2]);
-
-            pthread_mutex_lock(my_data->lock); // prevent race conditions between threads writing to result
-            (*my_data->result).insert(std::begin(*my_data->result) + (*my_data->result_index), corr);
+            parResults.insert(std::begin(*my_data->result) + (*my_data->result_index), corr);
             (*my_data->result_index)++;
-            pthread_mutex_unlock(my_data->lock);
         }
     }
+
+    pthread_mutex_lock(&lock); // prevent race conditions between threads writing to result
+    my_data->result->push_back(parResults);
+    pthread_mutex_unlock(&lock);
 }
 
 std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int MAX_THREADS)
 {
     std::vector<double> result {};
     unsigned int result_index = 0;
-    pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
     thread_data thread_data_array[MAX_THREADS];
     pthread_t p_threads[MAX_THREADS];
+
+    pthread_mutex_init(&lock, NULL);
 
     for (int i = 0; i < MAX_THREADS; i++) {
         thread_data_array[i].thread_id = i;
