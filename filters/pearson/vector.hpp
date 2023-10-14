@@ -14,7 +14,7 @@ public:
     Vector();
     Vector(unsigned size);
     Vector(unsigned size, double* data);
-    Vector(const Vector& other, int MAX_THREADS);
+    Vector(const Vector& other);
     ~Vector();
 
     double magnitude() const;
