@@ -39,14 +39,15 @@ void* correlation_coefficients_par(void* thread_args)
     for (int sample1 { start_index }; sample1 < end_index; sample1 ++) {
         for (int sample2 = sample1 + 1; sample2 < end_index; sample2++) {
             double corr = pearson((*my_data->datasets)[sample1], (*my_data->datasets)[sample2]);
-            parResults.push_back(corr);
+            //parResults.push_back(corr);
+            my_data->result->at(i) = corr;
             //parResults.insert(std::begin(*my_data->result) + (*my_data->result_index), corr);
             //(*my_data->result_index)++;
         }
         a++;
     }
 
-    pthread_mutex_lock(&lock); // prevent race conditions between threads writing to result
+    /*(*pthread_mutex_lock(&lock); // prevent race conditions between threads writing to result
     std::cout << "Thread " << my_data->thread_id << ":s loops:" << a << "\n";
     auto thread_i = 0;
     for(auto i { start_index }; i < end_index; i++){
@@ -54,7 +55,7 @@ void* correlation_coefficients_par(void* thread_args)
         thread_i++;
     }
     //my_data->result->insert(my_data->result. end_index, parResults.begin(), parResults.end());
-    pthread_mutex_unlock(&lock);
+    pthread_mutex_unlock(&lock);*/
 
     pthread_exit(NULL);
 }
