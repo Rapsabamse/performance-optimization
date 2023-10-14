@@ -40,7 +40,7 @@ void* correlation_coefficients_par(void* thread_args)
         for (int sample2 = sample1 + 1; sample2 < end_index; sample2++) {
             double corr = pearson((*my_data->datasets)[sample1], (*my_data->datasets)[sample2]);
             //parResults.push_back(corr);
-            my_data->result->at(result_i) = corr;
+            //my_data->result->at(result_i) = corr;
             //parResults.insert(std::begin(*my_data->result) + (*my_data->result_index), corr);
             //(*my_data->result_index)++;
             result_i++;
@@ -93,7 +93,7 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
         }
         a++;
     }
-
+    std::cout << "Vector size: " << result.size() << "\n";
     std::cout << "Real loops: " << a << "\n";
 
     return result;
