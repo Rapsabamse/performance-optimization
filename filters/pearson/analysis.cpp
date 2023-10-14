@@ -34,11 +34,11 @@ void* correlation_coefficients_par(void* thread_args)
 
     for (int sample1 = my_data->thread_id; sample1 < end_index - 1; sample1 += my_data->number_of_threads) {
         std::cout << "ran\t";
-        for (int sample2 = sample1 + 1; sample2 < end_index; sample2++) {
+        /*for (int sample2 = sample1 + 1; sample2 < end_index; sample2++) {
             double corr = pearson((*my_data->datasets)[sample1], (*my_data->datasets)[sample2]);
             parResults.insert(std::begin(*my_data->result) + (*my_data->result_index), corr);
             (*my_data->result_index)++;
-        }
+        }*/
     }
 
     pthread_mutex_lock(&lock); // prevent race conditions between threads writing to result
