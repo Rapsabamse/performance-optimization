@@ -56,7 +56,7 @@ void* correlation_coefficients_par(void* thread_args)
 
 std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int MAX_THREADS)
 {
-    std::vector<double> result(datasets.size()) {};
+    std::vector<double> result(datasets.size());
 
     unsigned int result_index = 0;
 
