@@ -30,8 +30,9 @@ void* correlation_coefficients_par(void* thread_args)
 
     unsigned int size = my_data->datasets->size() / my_data->number_of_threads;
     unsigned int start_index = my_data->thread_id * size;
-    size--;
     unsigned int end_index = start_index + size;
+
+    if(my_data->thread_id == (my_data->number_of_threads - 1)) end_index--;
 
     int a = 0;
     for (int sample1 { start_index }; sample1 < end_index; sample1 ++) {
