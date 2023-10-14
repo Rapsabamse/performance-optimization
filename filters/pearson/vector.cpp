@@ -34,18 +34,20 @@ Vector::Vector(unsigned size, double* data)
 {
 }
 
-struct thread_Vector{
+struct thread_vector{
         int thread_id;
         int thread_amount;
-        Vector* vct;
+        int size;
+        double* data;
+        double* dataOther;
 };
 
 void *threadVector(void * thread_arg){
     //Remake threadarg from void ptr to thread_data_blur struct so thread can use values
-    struct thread_Vector *my_data;
-    my_data = (struct thread_Vector *) thread_arg;
+    struct thread_vector *my_data;
+    my_data = (struct thread_vector *) thread_arg;
 
-    for (auto i { my_data->thread_id }; i < size; my_data->thread_amount) {
+    for (auto i { my_data->thread_id }; i < my_data->size; my_data->thread_amount) {
         data[i] = other.data[i];
     }
     pthread_exit(NULL);
@@ -54,10 +56,23 @@ void *threadVector(void * thread_arg){
 Vector::Vector(const Vector& other, int MAX_THREADS)
     : Vector { other.size }
 {
-    struct thread_data_blur thread_data_array[MAX_THREADS];
+    struct thread_vector thread_data_array[MAX_THREADS];
     pthread_t p_threads[MAX_THREADS];
+
     for (auto i { 0 }; i < size; i++) {
-        data[i] = other.data[i];
+        thread_data_array[i].thread_id = i;
+        thread_data_array[i].thread_amount = MAX_THREADS;
+        thread_data_array[i].size = size;
+        thread_data_array[i].data = data;
+        thread_data_array[i].dataOther = other.data;
+
+        //create threads and run threadSblurX, thread_data_array is passed as a parameter
+        pthread_create(
+            &p_threads[i],
+            NULL,
+            threadVector,
+            (void*) &thread_data_array[i]
+        );
     }
 }
 
