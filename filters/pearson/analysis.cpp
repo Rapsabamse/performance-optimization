@@ -52,6 +52,7 @@ void* correlation_coefficients_par(void* thread_args)
             }
             *my_data->syncVar++;
             waiting = false;
+            std::cout << "Done\n";
         }
     }
 
