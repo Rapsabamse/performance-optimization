@@ -56,7 +56,7 @@ void* correlation_coefficients_par(void* thread_args)
 
     pthread_mutex_lock(&lock);
 
-    my_data->result->insert(end(a), begin(parResults), end(parResults));
+    my_data->result->insert(std::end(a), std::begin(parResults), std::end(parResults));
 
     pthread_mutex_unlock(&lock);
 
