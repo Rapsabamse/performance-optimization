@@ -5,6 +5,7 @@ Author: David Holmqvist <daae19@student.bth.se>
 #include "vector.hpp"
 #include <iostream>
 #include <cmath>
+#include <pthread.h>
 
 Vector::Vector()
     : size { 0 }
@@ -33,9 +34,28 @@ Vector::Vector(unsigned size, double* data)
 {
 }
 
-Vector::Vector(const Vector& other)
+struct thread_Vector{
+        int thread_id;
+        int thread_amount;
+        Vector* vct;
+};
+
+void *threadVector(void * thread_arg){
+    //Remake threadarg from void ptr to thread_data_blur struct so thread can use values
+    struct thread_Vector *my_data;
+    my_data = (struct thread_Vector *) thread_arg;
+
+    for (auto i { my_data->thread_id }; i < size; my_data->thread_amount) {
+        data[i] = other.data[i];
+    }
+    pthread_exit(NULL);
+}
+
+Vector::Vector(const Vector& other, int MAX_THREADS)
     : Vector { other.size }
 {
+    struct thread_data_blur thread_data_array[MAX_THREADS];
+    pthread_t p_threads[MAX_THREADS];
     for (auto i { 0 }; i < size; i++) {
         data[i] = other.data[i];
     }

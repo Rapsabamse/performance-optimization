@@ -11,8 +11,9 @@ Author: David Holmqvist <daae19@student.bth.se>
 
 namespace Analysis {
 
-std::vector<double> correlation_coefficients(std::vector<Vector> datasets)
+std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int MAX_THREADS)
 {
+    std::cout << "\nThreads: " << MAX_THREADS << "\n\n";
     std::vector<double> result {};
 
     for (auto sample1 { 0 }; sample1 < datasets.size() - 1; sample1++) {
