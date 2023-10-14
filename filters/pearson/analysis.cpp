@@ -92,7 +92,7 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
     for (auto sample1 { 0 }; sample1 < datasets.size() - 1; sample1++) {
         for (auto sample2 { sample1 + 1 }; sample2 < datasets.size(); sample2++) {
             auto corr { pearson(datasets[sample1], datasets[sample2]) };
-            old_result.push_back(corr);
+            result.push_back(corr);
             a++;
         }
         b++;
@@ -110,7 +110,7 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
         std::cout << result.at(i) << " ";
     }*/
 
-    return old_result;
+    return result;
 }
 
 double pearson(Vector vec1, Vector vec2)
