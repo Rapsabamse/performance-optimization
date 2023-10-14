@@ -17,6 +17,7 @@ struct thread_data {
     unsigned int thread_id;
     std::vector<Vector>* datasets;
     std::vector<double>* result;
+    int vectorStart;
     unsigned int number_of_threads;
     unsigned int* result_index;
 };
@@ -37,7 +38,7 @@ void* correlation_coefficients_par(void* thread_args)
 
     int a = 0;
     int b = 0;
-    int result_i = start_index;
+    int result_i = my_data->vectorStart;
     std::cout <<"Thread: " << my_data->thread_id << " first write: " << result_i << "\n";
     for (int sample1 { start_index }; sample1 < end_index; sample1 ++) {
         for (int sample2 = sample1 + 1; sample2 < my_data->datasets->size(); sample2++) {
@@ -76,10 +77,13 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
 
     pthread_mutex_init(&lock, NULL);
 
+    int vectorSections = vector_size / MAX_THREADS;
+
     for (int i = 0; i < MAX_THREADS; i++) {
         thread_data_array[i].thread_id = i;
         thread_data_array[i].datasets = &datasets;
         thread_data_array[i].result = &result;
+        thread_data_array[i].vectorStart = vectorSections * i;
         thread_data_array[i].number_of_threads = MAX_THREADS;
         thread_data_array[i].result_index = &result_index;
 
