@@ -10,8 +10,6 @@ Author: David Holmqvist <daae19@student.bth.se>
 #include <vector>
 #include <pthread.h>
 
-#define MAX_THREADS 4
-
 namespace Analysis {
 
 struct thread_data {
@@ -44,7 +42,7 @@ void* correlation_coefficients_par(void* thread_args)
     }
 }
 
-std::vector<double> correlation_coefficients(std::vector<Vector> datasets)
+std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int MAX_THREADS)
 {
     std::vector<double> result {};
     unsigned int result_index = 0;
