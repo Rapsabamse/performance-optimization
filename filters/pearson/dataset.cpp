@@ -8,6 +8,10 @@ Author: David Holmqvist <daae19@student.bth.se>
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <iterator>
+#include <algorithm>
+#include <iomanip>
+#include <limits>
 
 namespace Dataset {
 std::vector<Vector> read(std::string filename)
