@@ -98,7 +98,7 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
             a++;
         }
     }
-    //std::cout << "Datasetsize: " << datasets.size() << "\n";
+    std::cout << "Datasetsize: " << datasets.size() << "\n";
     std::cout << "Vector (NEW) size: " << result.size() << "\n";
     std::cout << "Vector (OLD) size: " << old_result.size() << "\n";
     std::cout << "Real loops: " << a << "\n";
