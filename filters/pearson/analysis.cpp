@@ -44,7 +44,7 @@ void* correlation_coefficients_par(void* thread_args)
             //parResults.push_back(corr);
             //parResults.insert(std::begin(*my_data->result) + (*my_data->result_index), corr);
             //(*my_data->result_index)++;
-            my_data->result->at(result_i) = corr;
+            //my_data->result->at(result_i) = corr;
             result_i++;
             b++;
         }
