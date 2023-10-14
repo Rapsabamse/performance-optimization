@@ -18,7 +18,7 @@ struct thread_data {
     std::vector<Vector>* datasets;
     std::vector<double>* result;
     int vectorStart;
-    unsigned int* syncVar;
+    int* syncVar;
     unsigned int number_of_threads;
     unsigned int* result_index;
 };
