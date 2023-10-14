@@ -95,8 +95,8 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
         for (auto sample2 { sample1 + 1 }; sample2 < datasets.size(); sample2++) {
             auto corr { pearson(datasets[sample1], datasets[sample2]) };
             old_result.push_back(corr);
+            a++;
         }
-        a++;
     }
     //std::cout << "Datasetsize: " << datasets.size() << "\n";
     std::cout << "Vector (NEW) size: " << result.size() << "\n";
