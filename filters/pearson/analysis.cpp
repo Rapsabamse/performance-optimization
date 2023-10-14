@@ -46,7 +46,6 @@ void* correlation_coefficients_par(void* thread_args)
 
     int waiting = true;
     while(waiting){
-        std::cout << *my_data->syncVar << "\n";
         if(*my_data->syncVar == my_data->thread_id){
             for(auto i = 0; i < b; i++){
                 my_data->result->push_back(parResults[i]);
