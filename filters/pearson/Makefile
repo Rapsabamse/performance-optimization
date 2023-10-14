@@ -6,7 +6,7 @@ CXXFLAGS=-std=c++17 -g -Wunused -Wall -Wunused
 all: pearson
 
 pearson: vector dataset analysis pearson.cpp
-	$(CXX) $(CXXFLAGS) pearson.cpp vector.o dataset.o analysis.o -o pearson
+	$(CXX) $(CXXFLAGS) pearson.cpp vector.o dataset.o analysis.o -o pearson_par
 
 analysis: vector analysis.hpp analysis.cpp
 	$(CXX) $(CXXFLAGS) -c analysis.cpp -o analysis.o
