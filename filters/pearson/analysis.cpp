@@ -93,19 +93,17 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
     }
 
     int a = 0;
-    int b = 0;
     for (auto sample1 { 0 }; sample1 < datasets.size() - 1; sample1++) {
         for (auto sample2 { sample1 + 1 }; sample2 < datasets.size(); sample2++) {
             auto corr { pearson(datasets[sample1], datasets[sample2]) };
             old_result.push_back(corr);
-            b++;
+            a++;
         }
-        a++;
     }
     std::cout << "Datasetsize: " << datasets.size() << "\n";
     std::cout << "Vector (NEW) size: " << result.size() << "\n";
     std::cout << "Vector (OLD) size: " << old_result.size() << "\n";
-    std::cout << "Real loops: " << a/b << "\n";
+    std::cout << "Real loops: " << a << "\n";
     /*for(int i = 0; i < 32; i++){
         std::cout << old_result.at(i) << " ";
     }
