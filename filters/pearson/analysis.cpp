@@ -45,8 +45,8 @@ void* correlation_coefficients_par(void* thread_args)
             //(*my_data->result_index)++;
             my_data->result->at(result_i) = corr;
             result_i++;
-            a++;
         }
+            a++;
     }
     std::cout <<"Thread: " << my_data->thread_id << " Loops: " << a << "\n";
 
