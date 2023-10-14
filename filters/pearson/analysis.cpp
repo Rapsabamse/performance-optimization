@@ -50,7 +50,7 @@ void* correlation_coefficients_par(void* thread_args)
     std::cout << "Thread " << my_data->thread_id << ":s loops:" << a << "\n";
     auto thread_i = 0;
     for(auto i { start_index }; i < end_index; i++){
-        my_data->result->at(i) = parResults.at(thread_i);
+        *my_data->result->at(i) = parResults.at(thread_i);
         thread_i++;
     }
     //my_data->result->insert(my_data->result. end_index, parResults.begin(), parResults.end());
