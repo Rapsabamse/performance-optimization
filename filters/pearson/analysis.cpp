@@ -67,7 +67,7 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
 {
     auto vector_size = ( ( datasets.size() * datasets.size() ) - datasets.size() ) / 2;
     std::vector<double> result(vector_size);
-    std::vector<double> old_result = {};
+    std::vector<double> old_result {};
 
     unsigned int result_index = 0;
 
