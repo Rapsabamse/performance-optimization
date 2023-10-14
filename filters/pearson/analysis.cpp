@@ -43,6 +43,8 @@ void* correlation_coefficients_par(void* thread_args)
     pthread_mutex_lock(&lock); // prevent race conditions between threads writing to result
     my_data->result->push_back(parResults);
     pthread_mutex_unlock(&lock);
+
+    pthread_exit(NULL);
 }
 
 std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int MAX_THREADS)
