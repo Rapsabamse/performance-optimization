@@ -51,7 +51,7 @@ void* correlation_coefficients_par(void* thread_args)
             for(auto i = 0; i < b; i++){
                 my_data->result->push_back(parResults[i]);
             }
-            *my_data->syncVar++;
+            *my_data->syncVar = *my_data->syncVar + 1;
             waiting = false;
             std::cout << "Done\n";
         }
