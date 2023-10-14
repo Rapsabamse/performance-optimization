@@ -35,7 +35,7 @@ void* correlation_coefficients_par(void* thread_args)
     //The last index wasnt read by original function, need to skip it for the last thread
     if(my_data->thread_id == (my_data->number_of_threads - 1)) end_index--;
 
-    int result_i = 0;
+    int result_i = start_index;
     for (int sample1 { start_index }; sample1 < end_index; sample1 ++) {
         for (int sample2 = sample1 + 1; sample2 < end_index; sample2++) {
             double corr = pearson((*my_data->datasets)[sample1], (*my_data->datasets)[sample2]);
