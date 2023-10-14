@@ -105,8 +105,8 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
     std::cout << "Datasetsize: " << datasets.size() << "\n";
     std::cout << "Vector (NEW) size: " << result.size() << "\n";
     std::cout << "Vector (OLD) size: " << old_result.size() << "\n";
-    std::cout <<"Thread: " << my_data->thread_id << " Inner loop: " << a << "\n";
-    std::cout <<"Thread: " << my_data->thread_id << " Outer loop: " << b << "\n";
+    std::cout <<" Inner loop: " << a << "\n";
+    std::cout <<"Outer loop: " << b << "\n";
     /*for(int i = 0; i < 32; i++){
         std::cout << old_result.at(i) << " ";
     }
