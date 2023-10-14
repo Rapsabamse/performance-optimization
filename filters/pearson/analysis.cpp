@@ -47,7 +47,7 @@ void* correlation_coefficients_par(void* thread_args)
     }
 
     pthread_mutex_lock(&lock); // prevent race conditions between threads writing to result
-    std::cout << "loops: " << a << "\n";
+    std::cout << "Thread " << my_data->thread_id << ":s loops:" << a << "\n";
     pthread_mutex_unlock(&lock);
 
     pthread_exit(NULL);
