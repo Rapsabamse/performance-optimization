@@ -32,17 +32,18 @@ void* correlation_coefficients_par(void* thread_args)
     unsigned int start_index = my_data->thread_id * size;
     unsigned int end_index = start_index + size;
 
+    int a = 0;
     for (int sample1 { my_data->thread_id }; sample1 < size -1; sample1 += my_data->number_of_threads) {
-        std::cout << "ran\t";
         /*for (int sample2 = sample1 + 1; sample2 < end_index; sample2++) {
             double corr = pearson((*my_data->datasets)[sample1], (*my_data->datasets)[sample2]);
             parResults.insert(std::begin(*my_data->result) + (*my_data->result_index), corr);
             (*my_data->result_index)++;
         }*/
+        a++;
     }
 
     pthread_mutex_lock(&lock); // prevent race conditions between threads writing to result
-    std::cout << "finished :)\n";
+    std::cout << "loops: " << a << "\n";
     pthread_mutex_unlock(&lock);
 
     pthread_exit(NULL);
@@ -71,6 +72,17 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
     for (int i = 0; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL);
     }
+
+    int a = 0;
+    for (auto sample1 { 0 }; sample1 < datasets.size() - 1; sample1++) {
+        for (auto sample2 { sample1 + 1 }; sample2 < datasets.size(); sample2++) {
+            auto corr { pearson(datasets[sample1], datasets[sample2]) };
+            result.push_back(corr);
+        }
+        a++;
+    }
+
+    std::cout << "Real loops: " << a << "\n";
 
     return result;
 }
