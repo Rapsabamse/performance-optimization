@@ -40,11 +40,16 @@ void* correlation_coefficients_par(void* thread_args)
     int b = 0;
     int result_i = my_data->vectorStart;
     std::cout <<"Thread: " << my_data->thread_id << " first write: " << result_i << "\n";
+
+
     for (int sample1 { start_index }; sample1 < end_index; sample1 ++) {
         for (int sample2 = sample1 + 1; sample2 < my_data->datasets->size(); sample2++) {
             double corr = pearson((*my_data->datasets)[sample1], (*my_data->datasets)[sample2]);
-            //my_data->result->at(result_i) = corr;
-            parResults.push_back(corr);
+            pthread_mutex_lock(&lock);
+
+            my_data->result->push_back(corr);
+
+            pthread_mutex_unlock(&lock);
             result_i++;
             b++;
         }
@@ -53,12 +58,6 @@ void* correlation_coefficients_par(void* thread_args)
     std::cout <<"Thread: " << my_data->thread_id << " last write: " << result_i << "\n";
     std::cout <<"Thread: " << my_data->thread_id << " Inner loop: " << b << "\n";
     std::cout <<"Thread: " << my_data->thread_id << " Outer loop: " << a << "\n";
-
-    pthread_mutex_lock(&lock);
-
-    my_data->result->insert(std::end(a), std::begin(parResults), std::end(parResults));
-
-    pthread_mutex_unlock(&lock);
 
     /*for (auto sample1 { 0 }; sample1 < datasets.size() - 1; sample1++) {
         for (auto sample2 { sample1 + 1 }; sample2 < datasets.size(); sample2++) {
