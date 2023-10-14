@@ -28,7 +28,7 @@ void* correlation_coefficients_par(void* thread_args)
 
     std::vector<double> parResults;
 
-    unsigned int size = my_data->datasets->size() / my_data->number_of_threads;
+    unsigned int size = my_data->datasets->size() / my_data->thread_id;
     unsigned int start_index = my_data->thread_id * size;
     unsigned int end_index = start_index + size;
 
