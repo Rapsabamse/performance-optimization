@@ -38,8 +38,8 @@ void* correlation_coefficients_par(void* thread_args)
     int a = 0;
     int b = 0;
     int result_i = start_index;
-    for (int sample1 { start_index }; sample1 < end_index; sample1 ++) {
-        for (int sample2 = sample1 + 1; sample2 < my_data->datasets->size(); sample2++) {
+    for (int sample1 { 0 }; sample1 <my_data->datasets->size(); sample1++) {
+        for (int sample2 = sample1 + my_data->thread_id; sample2 < end_index; sample2++) {
             double corr = pearson((*my_data->datasets)[sample1], (*my_data->datasets)[sample2]);
             //parResults.push_back(corr);
             //parResults.insert(std::begin(*my_data->result) + (*my_data->result_index), corr);
@@ -78,7 +78,7 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
     pthread_mutex_init(&lock, NULL);
 
     for (int i = 0; i < MAX_THREADS; i++) {
-        thread_data_array[i].thread_id = i;
+        thread_data_array[i].thread_id = i + 1;
         thread_data_array[i].datasets = &datasets;
         thread_data_array[i].result = &result;
         thread_data_array[i].number_of_threads = MAX_THREADS;
