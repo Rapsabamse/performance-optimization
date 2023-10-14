@@ -35,6 +35,7 @@ void* correlation_coefficients_par(void* thread_args)
     //The last index wasnt read by original function, need to skip it for the last thread
     if(my_data->thread_id == (my_data->number_of_threads - 1)) end_index--;
 
+    int a = 0;
     int result_i = start_index;
     for (int sample1 { start_index }; sample1 < end_index; sample1 ++) {
         for (int sample2 = sample1 + 1; sample2 < end_index; sample2++) {
@@ -44,8 +45,10 @@ void* correlation_coefficients_par(void* thread_args)
             //(*my_data->result_index)++;
             my_data->result->at(result_i) = corr;
             result_i++;
+            a++;
         }
     }
+    std::cout << "Loops: " << a << "\n";
 
     /*(*pthread_mutex_lock(&lock); // prevent race conditions between threads writing to result
     std::cout << "Thread " << my_data->thread_id << ":s loops:" << a << "\n";
