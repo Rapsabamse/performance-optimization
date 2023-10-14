@@ -33,7 +33,7 @@ void* correlation_coefficients_par(void* thread_args)
     unsigned int end_index = start_index + size;
 
     int a = 0;
-    for (int sample1 { my_data->thread_id }; sample1 < size -1; sample1 += my_data->number_of_threads) {
+    for (int sample1 { start_index }; sample1 < end_index; sample1 += my_data->number_of_threads) {
         /*for (int sample2 = sample1 + 1; sample2 < end_index; sample2++) {
             double corr = pearson((*my_data->datasets)[sample1], (*my_data->datasets)[sample2]);
             parResults.insert(std::begin(*my_data->result) + (*my_data->result_index), corr);
