@@ -41,7 +41,7 @@ void* correlation_coefficients_par(void* thread_args)
     }
 
     pthread_mutex_lock(&lock); // prevent race conditions between threads writing to result
-    my_data->result->push_back(parResults);
+    std::cout << "finished :)\n";
     pthread_mutex_unlock(&lock);
 
     pthread_exit(NULL);
