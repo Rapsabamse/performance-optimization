@@ -17,10 +17,8 @@ struct thread_data {
     unsigned int thread_id;
     std::vector<Vector>* datasets;
     std::vector<double>* result;
-    int vectorStart;
     int* syncVar;
     unsigned int number_of_threads;
-    unsigned int* result_index;
 };
 
 void* correlation_coefficients_par(void* thread_args)
@@ -77,9 +75,7 @@ std::vector<double> correlation_coefficients(std::vector<Vector> datasets, int M
         thread_data_array[i].datasets = &datasets;
         thread_data_array[i].result = &result;
         thread_data_array[i].syncVar = &syncVar;
-        thread_data_array[i].vectorStart = vectorSections * i;
         thread_data_array[i].number_of_threads = MAX_THREADS;
-        thread_data_array[i].result_index = &result_index;
 
         pthread_create(&p_threads[i], NULL, correlation_coefficients_par, (void*) &thread_data_array[i]);
     }
