@@ -31,9 +31,9 @@ void* correlation_coefficients_par(void* thread_args)
     unsigned int size = my_data->datasets->size() / my_data->number_of_threads;
     unsigned int start_index = my_data->thread_id * size;
     unsigned int end_index = start_index + size;
-
     //The last index wasnt read by original function, need to skip it for the last thread
     if(my_data->thread_id == (my_data->number_of_threads - 1)) end_index--;
+    std::cout << "Size: " << size << " start: " << start_index << " end: " << end_index << "\n\n";
 
     int a = 0;
     int result_i = start_index;
