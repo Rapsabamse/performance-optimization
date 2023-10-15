@@ -2,7 +2,7 @@
 Author: David Holmqvist <daae19@student.bth.se>
 */
 
-#include "ppm.hpp"
+#include "ppm_par.hpp"
 #include <pthread.h>
 #include <fstream>
 #include <iostream>
