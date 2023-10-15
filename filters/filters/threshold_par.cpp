@@ -4,7 +4,7 @@ Author: David Holmqvist <daae19@student.bth.se>
 
 #include "filters.hpp"
 #include "matrix.hpp"
-#include "ppm.hpp"
+#include "ppm_par.hpp"
 #include <cstdlib>
 #include <iostream>
 
@@ -18,7 +18,7 @@ int main(int argc, char const* argv[])
     PPM::Reader reader {};
     PPM::Writer writer {};
 
-    auto m { reader(argv[1]) };
+    auto m { reader(argv[1], std::stoul(argv[3])) };
     Filter::threshold_par(m, std::stoul(argv[3]));
 
     writer(m, argv[2]);
