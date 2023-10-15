@@ -32,12 +32,12 @@ private:
     int get_file_size(std::string filename);
 
 public:
-    Matrix operator()(std::string filename);
+    Matrix operator()(std::string filename, int MAX_THREADS);
 };
 
 class Writer {
 public:
-    void operator()(Matrix m, std::string filename, int MAX_THREADS);
+    void operator()(Matrix m, std::string filename);
 };
 
 }
