@@ -279,6 +279,7 @@ void *threadblurY(void * thread_arg){
             dstB[y * dstXsize + x] = b / n;
         }
     }
+    pthread_exit(NULL);
 }
 
 //parallelised versions
