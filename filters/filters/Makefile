@@ -11,11 +11,11 @@ threshold: matrix ppm filters threshold.cpp
 blur: matrix ppm filters blur.cpp
 	$(CXX) $(CXXFLAGS) blur.cpp matrix.o ppm.o filters.o -o blur
 
-threshold_par: matrix ppm filters threshold_par.cpp
-	$(CXX) $(CXXFLAGS) threshold_par.cpp matrix.o ppm.o filters.o -o threshold_par
+threshold_par: matrix ppm_par filters threshold_par.cpp
+	$(CXX) $(CXXFLAGS) threshold_par.cpp matrix.o ppm_par.o filters.o -o threshold_par
 
-blur_par: matrix ppm filters blur_par.cpp
-	$(CXX) $(CXXFLAGS) blur_par.cpp matrix.o ppm.o filters.o -o blur_par
+blur_par: matrix ppm_par filters blur_par.cpp
+	$(CXX) $(CXXFLAGS) blur_par.cpp matrix.o ppm_par.o filters.o -o blur_par
 
 filters: matrix filters.hpp filters.cpp
 	$(CXX) $(CXXFLAGS) -c filters.cpp -o filters.o
