@@ -23,12 +23,11 @@ filters: matrix filters.hpp filters.cpp
 matrix: matrix.hpp matrix.cpp
 	$(CXX) $(CXXFLAGS) -c matrix.cpp -o matrix.o
 
-ppm_par: ppm_par.hpp ppm_par.cpp
+ppm_par: ppm.hpp ppm.cpp
 	$(CXX) $(CXXFLAGS) -c ppm_par.cpp -o ppm_par.o
 
 ppm: ppm.hpp ppm.cpp
 	$(CXX) $(CXXFLAGS) -c ppm.cpp -o ppm.o
-
 
 clean:
 	rm -rf blur threshold *.ppm *.o *.dSYM 2> /dev/null
