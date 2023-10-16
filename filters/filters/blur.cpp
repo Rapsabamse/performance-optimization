@@ -22,7 +22,7 @@ int main(int argc, char const* argv[])
     auto radius { static_cast<unsigned>(std::stoul(argv[1])) };
 
     Filter::blur(m, radius);
-    writer(blurred, argv[3]);
+    writer(m, argv[3]);
 
     return 0;
 }
