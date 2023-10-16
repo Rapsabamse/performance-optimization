@@ -9,7 +9,7 @@ pearson: vector dataset analysis pearson.cpp
 	$(CXX) $(CXXFLAGS) pearson.cpp vector.o dataset.o analysis.o -o pearson
 
 pearson_par: vector dataset analysis_par pearson_par.cpp
-	$(CXX) $(CXXFLAGS) pearson.cpp vector.o dataset.o analysis_par.o -o pearson_par
+	$(CXX) $(CXXFLAGS) pearson_par.cpp vector.o dataset.o analysis_par.o -o pearson_par
 
 analysis: vector analysis.hpp analysis.cpp
 	$(CXX) $(CXXFLAGS) -c analysis.cpp -o analysis.o
