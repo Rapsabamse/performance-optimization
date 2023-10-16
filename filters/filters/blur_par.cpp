@@ -3,7 +3,7 @@ Author: David Holmqvist <daae19@student.bth.se>
 */
 
 #include "matrix.hpp"
-#include "ppm_par.hpp"
+#include "ppm.hpp"
 #include "filters.hpp"
 #include <cstdlib>
 #include <iostream>
@@ -18,7 +18,7 @@ int main(int argc, char const* argv[])
     PPM::Reader reader {};
     PPM::Writer writer {};
 
-    auto m { reader(argv[2], std::stoul(argv[4])) };
+    auto m { reader(argv[2]) };
     auto radius { static_cast<unsigned>(std::stoul(argv[1])) };
 
     Filter::blur_par(m, radius, std::stoul(argv[4]));
