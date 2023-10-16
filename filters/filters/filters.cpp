@@ -150,16 +150,23 @@ Matrix threshold(Matrix &m)
     return 0;
 }
 
+//Struct to be used in the threads
 struct thread_data_blur{
+        //Id, number thread_amount used to iterate through loop
         int thread_id;
         int thread_amount;
+        //Readius used by filter
         int radius;
+
+        //ptr to matrix for the new picture
         double* w;
 
+        //Dimensions for the matrixes
         int dstMatrix_x;
         int dstMatrix_y;
         int scrMatrix_x;
 
+        //Ptrs for dest matrix and scr matrixes colors
         unsigned char* dstR;
         unsigned char* dstG;
         unsigned char* dstB;
@@ -173,10 +180,10 @@ void *threadblurX(void * thread_arg){
     struct thread_data_blur *my_data;
     my_data = (struct thread_data_blur *) thread_arg;
 
-    int radius = my_data->radius;
-    double* w = my_data->w;
 
     //Get data from struct, increases readability of loop
+    int radius = my_data->radius;
+    double* w = my_data->w;
 
     //Matrix sizes
     int dstXsize = my_data->dstMatrix_x;
@@ -193,7 +200,11 @@ void *threadblurX(void * thread_arg){
     unsigned char* scrG = my_data->scrG;
     unsigned char* scrB = my_data->scrB;
 
+    //Iterate through x dimension one by one (same as in sequential version)
     for (auto x { 0 }; x < dstXsize; x ++) {
+        //Start at thread id, and jump the amount of threads there are for each iteration
+        //Ex. Thread id 2, nbr of threads = 32, Will start at 2, will jump 32 each iteration
+        //Code is otherwise the same as in sequential version
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
             auto r { my_data->w[0] * dstR[y * dstXsize + x] },
                 g { my_data->w[0] * dstG[y * dstXsize + x] },
@@ -229,10 +240,9 @@ void *threadblurY(void * thread_arg){
     struct thread_data_blur *my_data;
     my_data = (struct thread_data_blur *) thread_arg;
 
+    //Get data from struct, increases readability of loop
     int radius = my_data->radius;
     double* w = my_data->w;
-
-    //Get data from struct, increases readability of loop
 
     //Matrix sizes
     int dstXsize = my_data->dstMatrix_x;
@@ -249,8 +259,12 @@ void *threadblurY(void * thread_arg){
     unsigned char* scrG = my_data->scrG;
     unsigned char* scrB = my_data->scrB;
 
+    //Iterate through x dimension one by one (same as in sequential version)
     for (auto x { 0 }; x < dstXsize; x++) {
         for (auto y { my_data->thread_id }; y < dstYsize; y += my_data->thread_amount) {
+        //Start at thread id, and jump the amount of threads there are for each iteration
+        //Ex. Thread id 2, nbr of threads = 32, Will start at 2, will jump 32 each iteration
+        //Code is otherwise the same as in sequential version
             auto r { my_data->w[0] * scrR[y * scrXsize + x] },
                 g { my_data->w[0] * scrG[y * scrXsize + x] },
                 b { my_data->w[0] * scrB[y * scrXsize + x] },
@@ -366,17 +380,26 @@ Matrix blur_par(Matrix &dst, const int radius, const int MAX_THREADS)
     return dst;
 }
 
+//Struct used by threads in the threshold filter to use as parameters.
 struct thread_data{
-        int thread_id;
-        int thread_amount;
-        int nump;
-        unsigned char* dstR;
-        unsigned char* dstG;
-        unsigned char* dstB;
-        unsigned int* sum;
-};
+    //Id of thread, amount of threads used for loop iterations
+    int thread_id;
+    int thread_amount;
 
+    //Used by function
+    int nump;
+
+    //pointers to the colors of dst matrix
+    unsigned char* dstR;
+    unsigned char* dstG;
+    unsigned char* dstB;
+
+    //Sum of all colors
+    unsigned int* sum;
+};
+//Mutex to be used for syncronisation
 pthread_mutex_t lock;
+
 void *threadSum(void * thread_arg){
     struct thread_data *my_data;
     my_data = (struct thread_data *) thread_arg;
@@ -404,6 +427,8 @@ void *threadUpdateImg(void * thread_arg){
 
     //Start at thread id
     //Jump the amount of threads, each thread will run trough its own part of the matrix
+    //No need for syncronisation, will never work on same data
+    //Otherwise the same as the sequential version
     unsigned sum = *my_data->sum;
     unsigned psum {};
     for (auto i { my_data->thread_id }; i < my_data->nump; i += my_data->thread_amount) {
@@ -414,7 +439,6 @@ void *threadUpdateImg(void * thread_arg){
             my_data->dstR[i] = my_data->dstG[i] = my_data->dstB[i] = 255;
         }
     }
-
     pthread_exit(NULL);
 }
 

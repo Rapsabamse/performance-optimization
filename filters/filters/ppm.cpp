@@ -21,7 +21,7 @@ void Reader::fill(std::string filename)
         return;
     }
 
-    stream << f.rdbuf();
+    stream << f.rdbuf(); // put file data in stream for get_magic, get_dimensions and get_color_max to use
 
     f.seekg(0, std::istream::end);
     std::streamoff len = f.tellg(); // get length of file
@@ -31,10 +31,10 @@ void Reader::fill(std::string filename)
     std::string line;
     res.clear();
     if (len > 0) {
-        res.reserve(static_cast<std::string::size_type>(len));
+        res.reserve(static_cast<std::string::size_type>(len)); // reserve space to prevent expensive reallocations
     }
     while (getline(f, line)) {
-        (res += line) += "\n";
+        (res += line) += "\n"; // read file into string for get_data to read pixel color values from
     }
 
     f.close();
@@ -93,14 +93,17 @@ std::tuple<unsigned char*, unsigned char*, unsigned char*> Reader::get_data(unsi
 
     unsigned int j = stream.tellg(); // variable to keep reading the next element, starts at current position in stream
 
-    for (auto i { 0 }, read { 0 }; i < size; i++) {
 
-        R[i] = res[j];
-        G[i] = res[j + 1];
-        B[i] = res[j + 2];
-        j+=3;
+    for (auto i { 0 }, read { 0 }; i < size; i++) { // iterate through the R, G and B arrays
+
+        R[i] = res[j];      // store the red pixel value in R[i]
+        G[i] = res[j + 1];  // store the green pixel value in G[i]
+        B[i] = res[j + 2];  // store the blue pixel value in B[i]
+
+        j+=3;  // increment index in res by 3 so next value that is red is the next green pixel value
         
 
+        // delete memory if data was not present
         if (&R[i] == nullptr || &G[i] == nullptr || &B[i] == nullptr) {
             delete[] R;
             delete[] G;
