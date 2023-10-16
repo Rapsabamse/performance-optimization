@@ -2,7 +2,7 @@
 Author: David Holmqvist <daae19@student.bth.se>
 */
 
-#include "analysis.hpp"
+#include "analysis_par.hpp"
 #include "dataset.hpp"
 #include <iostream>
 #include <cstdlib>
